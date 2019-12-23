@@ -1,0 +1,500 @@
+---
+title: "FieldedRetrieval_tune"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+library(ggplot2)
+rm(list = ls())
+## Description
+This document contains extended analysis for Field Selection research to consider feedback from ADCS 2016 symposium. Mainly, this extend the initial research by tuning the BM25 parameter (b and k1) and measuring the top rank documents' length
+
+## Load trec eval results 
+This explore tuning results using b values uniform for all fields. b between 0 and 1 with increment 0.05. k1 between 0.2 and 3 with increment of 0.2
+
+contain score: map, p10, ndcg10, ndcg1000, bpref, Num Unjudged in top 10 results, and relevance String.
+
+#WEB2013-2014
+trecEvalResult <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecDetailResultTuned_web2013-2014.txt", header=TRUE, row.names=NULL)
+avgScoresWeb = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+#HARD2005
+trecEvalResult <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecResultSummaryTuned_aquaint_hard2005.txt", header=TRUE, row.names=NULL)
+avgScoresHard = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+#CLEF2015
+trecEvalResult <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecDetailResultTuned_Clef2015.txt", header=TRUE, row.names=NULL)
+avgScoresClef2015 = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+#CLEF2016
+trecEvalResult <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecDetailResultTuned_Clef2016.txt", header=TRUE, row.names=NULL)
+avgScoresClef2016 = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+
+#remove the unused trecEvalResult object
+rm(trecEvalResult)
+
+# chart setup
+lW = 1.5
+w = 8
+h = 5
+margin=c(5,4,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title")
+cols <- c("blue", "orange", "gray40", "blue","orange")
+ltys <- c(0,0,0,0,0)
+pchs <- c(2,5,3,6,0)
+par(mar=margin)
+
+#construct table and boxplot BASE for each measurement
+#MAP Base plot
+avgScores<-cbind(Schema=avgScoresWeb[1], Web=avgScoresWeb$map, Hard=avgScoresHard$map, Clef2015=avgScoresClef2015$map, Clef2016=avgScoresClef2016$map)
+boxplot(avgScores[,-1], ylab="MAP Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#P10 Base plot
+avgScores<-cbind(Schema=avgScoresWeb[1], Web=avgScoresWeb$p10, Hard=avgScoresHard$p10, Clef2015=avgScoresClef2015$p10, Clef2016=avgScoresClef2016$p10)
+par(mar=margin)
+boxplot(avgScores[,-1], ylab="P10 Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#NDCG10 Base plot
+avgScores<-cbind(Schema=avgScoresWeb[1], Web=avgScoresWeb$ndcg10, Hard=avgScoresHard$ndcg10, Clef2015=avgScoresClef2015$ndcg10, Clef2016=avgScoresClef2016$ndcg10)
+boxplot(avgScores[,-1], ylab="NDCG@10 Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#NDCG1000 Base plot
+avgScores<-cbind(Schema=avgScoresWeb[1], Web=avgScoresWeb$ndcg1000, Hard=avgScoresHard$ndcg1000, Clef2015=avgScoresClef2015$ndcg1000, Clef2016=avgScoresClef2016$ndcg1000)
+boxplot(avgScores[,-1], ylab="NDCG@1000 Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#BPREF Base plot
+avgScores<-cbind(Schema=avgScoresWeb[1], Web=avgScoresWeb$bpref, Hard=avgScoresHard$bpref, Clef2015=avgScoresClef2015$bpref, Clef2016=avgScoresClef2016$bpref)
+boxplot(avgScores[,-1], ylab="BPREF Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+# After drawing the base plot, Add Points for Default Parameters (b=0.75 and K1=1.2)
+defaultScores=avgScores[grep("_b0.75_k1.2",avgScores$Group.1),]
+# Add Points for default scores
+for(i in 1:4)
+{
+  points(i, defaultScores[grep("01000000", defaultScores$Group.1),i+1], pch=pchs[1],   col=cols[1], lwd=lW)
+  print (paste0("Title Only,", i, ",score=,",defaultScores[grep("01000000", defaultScores$Group.1),i+1]))
+  
+  points(i, defaultScores[grep("00000001", defaultScores$Group.1),i+1], pch=pchs[2], col=cols[2], lwd=lW)
+  print (paste0("Body Only,", i, ",score=,",defaultScores[grep("00000001", defaultScores$Group.1),i+1]))
+  
+  points(i, defaultScores[grep("01000001", defaultScores$Group.1),i+1], pch=pchs[3], col=cols[3], lwd=lW)
+  print (paste0("Title = Body,", i, ",score=,",defaultScores[grep("01000001", defaultScores$Group.1),i+1]))
+  
+  points(i, defaultScores[grep("03000001", defaultScores$Group.1),i+1], pch=pchs[4], col=cols[4], lwd=lW)
+  print (paste0("Title Boosting,", i, ",score=,",defaultScores[grep("03000001", defaultScores$Group.1),i+1]))
+
+  points(i, defaultScores[grep("01000003", defaultScores$Group.1),i+1], pch=pchs[5], col=cols[5], lwd=lW)
+  print (paste0("Body Boosting,", i, ",score=,",defaultScores[grep("01000003", defaultScores$Group.1),i+1]))
+}
+
+
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1, inset= c(0,-0.2),text.width= 0.7)
+
+#Save to PDF for Default MAP
+dev.copy(pdf,paste(outputPath, "boxplotDefault_MAP.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for Default P10
+dev.copy(pdf,paste(outputPath, "boxplotDefault_P10.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for Default NDCG10
+dev.copy(pdf,paste(outputPath, "boxplotDefault_NDCG10.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for Default NDCG1000
+dev.copy(pdf,paste(outputPath, "boxplotDefault_NDCG1000.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for Default BPREF
+dev.copy(pdf,paste(outputPath, "boxplotDefault_BPREF.pdf", sep=""), width=w, height=h)
+dev.off()
+
+
+
+
+
+# After drawing the base plot, Add points for the best score in each weighting scheme
+#Get the max value of each wighting scheme
+bestTitleOnly=apply(avgScores[grep("01000000",avgScores$Group.1),],2,max)
+bestBodyOnly=apply(avgScores[grep("00000001",avgScores$Group.1),],2,max)
+bestTitleBody=apply(avgScores[grep("01000001",avgScores$Group.1),],2,max)
+bestTitleBoost=apply(avgScores[grep("03000001",avgScores$Group.1),],2,max)
+bestBodyBoost=apply(avgScores[grep("01000003",avgScores$Group.1),],2,max)
+
+for(i in 1:4)
+{
+  points(i, bestTitleOnly[i+1], pch=pchs[1],   col=cols[1], lwd=lW)
+  print (paste0("Title Only,", i, ",score=,",bestTitleOnly[i+1]))
+  
+  points(i, bestBodyOnly[i+1], pch=pchs[2], col=cols[2], lwd=lW)
+  print (paste0("Body Only,", i, ",score=,",bestBodyOnly[i+1]))
+  
+  points(i, bestTitleBody[i+1], pch=pchs[3], col=cols[3], lwd=lW)
+  print (paste0("Title=Body Only,", i, ",score=,",bestTitleBody[i+1]))
+  
+  points(i, bestTitleBoost[i+1], pch=pchs[4], col=cols[4], lwd=lW)
+  print (paste0("Title Boost Only,", i, ",score=,",bestTitleBoost[i+1]))
+  
+  points(i, bestBodyBoost[i+1], pch=pchs[5], col=cols[5], lwd=lW)
+  print (paste0("Body Boost Only,", i, ",score=,",bestBodyBoost[i+1]))
+}
+
+
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1, inset= c(0,-0.2),text.width= 0.7)
+
+#Save to PDF for MAP
+dev.copy(pdf,paste(outputPath, "boxplotBest_MAP.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for P10
+dev.copy(pdf,paste(outputPath, "boxplotBest_P10.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for NDCG10
+dev.copy(pdf,paste(outputPath, "boxplotBest_NDCG10.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for NDCG1000
+dev.copy(pdf,paste(outputPath, "boxplotBest_NDCG1000.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for BPREF
+dev.copy(pdf,paste(outputPath, "boxplotBest_BPREF.pdf", sep=""), width=w, height=h)
+dev.off()
+
+
+
+
+# Separate schema name into columns
+library(tidyr)
+library(dplyr)
+trecEvalResult=separate(trecEvalResult,schema,c("index","weight","b","k"),sep="_",remove=FALSE,conver=FALSE)
+
+trecEvalResult["b"]=gsub("b","",trecEvalResult["b"])
+
+
+
+
+
+## Load trec eval results from tuning with varied b parameter
+This explore tuning results using b values varied for all fields (title and body) b (b title and b body) between 0 and 1 with increment 0.05. k1 using the best k1 values from the uniform tuning.
+
+contain score: map, p10, ndcg10, ndcg1000, bpref, Num Unjudged in top 10 results, and relevance String.
+
+#WEB2013-2014 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_webNav2013-2014.txt", header=TRUE, row.names=NULL)
+avgScoresVariedWeb = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+#HARD2005 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecResultSummaryTunedVaried_aquaint_hard2005.txt", header=TRUE, row.names=NULL)
+avgScoresVariedHard = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+#CLEF2015 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_Clef2015.txt", header=TRUE, row.names=NULL)
+avgScoresVariedClef2015 = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+#CLEF2016 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_Clef2016.txt", header=TRUE, row.names=NULL)
+
+
+#Get average performance scores for each parameter schemes
+avgScoresVariedClef2016 = aggregate(trecEvalResult[,3:7],list(trecEvalResult$schema), mean)
+
+
+#remove the unused trecEvalResult object
+rm(trecEvalResult)
+
+# chart setup
+lW = 1.5
+w = 8
+h = 5
+margin=c(5,4,1,1)
+outputPath = "/Volumes/Data/Github/confirmation/confirmationDocument/"
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title")
+cols <- c("blue", "orange", "gray40", "blue","orange")
+ltys <- c(0,0,0,0,0)
+pchs <- c(2,5,3,6,0)
+par(mar=margin)
+
+#construct table and boxplot BASE for each measurement
+#MAP Base plot Varied
+avgScores<-cbind(Schema=avgScoresVariedWeb[1], Web=avgScoresVariedWeb$map, Hard=avgScoresVariedHard$map, Clef2015=avgScoresVariedClef2015$map, Clef2016=avgScoresVariedClef2016$map)
+boxplot(avgScores[,-1], ylab="MAP Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#P10 Base plot Varied 
+avgScores<-cbind(Schema=avgScoresVariedWeb[1], Web=avgScoresVariedWeb$p10, Hard=avgScoresVariedHard$p10, Clef2015=avgScoresVariedClef2015$p10, Clef2016=avgScoresVariedClef2016$p10)
+par(mar=margin)
+boxplot(avgScores[,-1], ylab="P10 Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#NDCG10 Base plot Varied 
+avgScores<-cbind(Schema=avgScoresVariedWeb[1], Web=avgScoresVariedWeb$ndcg10, Hard=avgScoresVariedHard$ndcg10, Clef2015=avgScoresVariedClef2015$ndcg10, Clef2016=avgScoresVariedClef2016$ndcg10)
+boxplot(avgScores[,-1], ylab="NDCG@10 Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#NDCG1000 Base plot Varied
+avgScores<-cbind(Schema=avgScoresVariedWeb[1], Web=avgScoresVariedWeb$ndcg1000, Hard=avgScoresVariedHard$ndcg1000, Clef2015=avgScoresVariedClef2015$ndcg1000, Clef2016=avgScoresVariedClef2016$ndcg1000)
+boxplot(avgScores[,-1], ylab="NDCG@1000 Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+#BPREF Base plot Varied
+avgScores<-cbind(Schema=avgScoresVariedWeb[1], Web=avgScoresVariedWeb$bpref, Hard=avgScoresVariedHard$bpref, Clef2015=avgScoresVariedClef2015$bpref, Clef2016=avgScoresVariedClef2016$bpref)
+boxplot(avgScores[,-1], ylab="BPREF Score",names=c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016"))
+
+
+# After drawing the base plot, Add points for the best score in each weighting scheme
+#Get the max value of each wighting scheme
+# Varied b values
+bestTitleOnly=apply(avgScores[grep("01000000",avgScores$Group.1),],2,max)
+bestBodyOnly=apply(avgScores[grep("00000001",avgScores$Group.1),],2,max)
+bestTitleBody=apply(avgScores[grep("01000001",avgScores$Group.1),],2,max)
+bestTitleBoost=apply(avgScores[grep("03000001",avgScores$Group.1),],2,max)
+bestBodyBoost=apply(avgScores[grep("01000003",avgScores$Group.1),],2,max)
+
+for(i in 1:4)
+{
+  points(i, bestTitleOnly[i+1], pch=pchs[1],   col=cols[1], lwd=lW)
+  print (paste0("Title Only,", i, ",score=,",bestTitleOnly[i+1]))
+  
+  points(i, bestBodyOnly[i+1], pch=pchs[2], col=cols[2], lwd=lW)
+  print (paste0("Body Only,", i, ",score=,",bestBodyOnly[i+1]))
+  
+  points(i, bestTitleBody[i+1], pch=pchs[3], col=cols[3], lwd=lW)
+  print (paste0("Title=Body Only,", i, ",score=,",bestTitleBody[i+1]))
+  
+  points(i, bestTitleBoost[i+1], pch=pchs[4], col=cols[4], lwd=lW)
+  print (paste0("Title Boost Only,", i, ",score=,",bestTitleBoost[i+1]))
+  
+  points(i, bestBodyBoost[i+1], pch=pchs[5], col=cols[5], lwd=lW)
+  print (paste0("Body Boost Only,", i, ",score=,",bestBodyBoost[i+1]))
+}
+
+
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1, inset= c(0,-0.2),text.width= 0.7)
+
+#Save to PDF for MAP Varied
+dev.copy(pdf,paste(outputPath, "boxplotBestVaried_MAP.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for P10 Varied
+dev.copy(pdf,paste(outputPath, "boxplotBestVaried_P10.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for NDCG10 Varied
+dev.copy(pdf,paste(outputPath, "boxplotBestVaried_NDCG10.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for NDCG1000 Varied
+dev.copy(pdf,paste(outputPath, "boxplotBestVaried_NDCG1000.pdf", sep=""), width=w, height=h)
+dev.off()
+#Save to PDF for BPREF Varied
+dev.copy(pdf,paste(outputPath, "boxplotBestVaried_BPREF.pdf", sep=""), width=w, height=h)
+dev.off()
+
+
+## ******** Find pattern using uniform paremeter (best parameter for the collection) 
+#Load CLEF2016 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_Clef2016.txt", header=TRUE, row.names=NULL)
+
+#Load results from the best bt, bb, and K1
+bestResults = trecEvalResult[grep("bt0.9_bb0.4_k2.4", trecEvalResult$schema),]
+
+#Load query length
+queryLength <- read.table("/Volumes/Data/Phd/Data/clef2016_eval/clef2016_QueryLength.txt", header=TRUE, row.names=NULL)
+
+#Merge the results table with query length
+bestResults = merge(bestResults,queryLength,by.x="QueryNum", by.y="QueryNum")
+
+#Grep Title Only results
+bestTitleOnly = bestResults[grep("01000000", bestResults$schema),]
+bestBodyOnly = bestResults[grep("00000001", bestResults$schema),]
+bestTitleBoost = bestResults[grep("03000001", bestResults$schema),]
+bestBodyBoost = bestResults[grep("01000003", bestResults$schema),]
+
+#Aggregate Mean per Query Length (Term Count)
+meanPerLength = aggregate(bestTitleOnly[, 3:7], list(bestTitleOnly$TermCount),mean)
+
+meanPerLength = aggregate(bestBodyOnly[, 3:7], list(bestBodyOnly$TermCount),mean)
+
+meanPerLength = aggregate(bestTitleBoost[, 3:7], list(bestTitleBoost$TermCount),mean)
+
+meanPerLength = aggregate(bestBodyBoost[, 3:7], list(bestBodyBoost$TermCount),mean)
+
+plot(meanPerLength$Group.1, meanPerLength$ndcg1000)
+abline(lm(meanPerLength$ndcg1000 ~ meanPerLength$Group.1))
+cor(meanPerLength$ndcg1000,meanPerLength$Group.1)
+
+## ******** Find pattern using varied b paremeter use the best for each queries
+#Load WEB2013-2014 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_webNav2013-2014.txt", header=TRUE, row.names=NULL)
+
+#Load HARD2005 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecResultSummaryTunedVaried_aquaint_hard2005.txt", header=TRUE, row.names=NULL)
+
+#CLEF2015 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_Clef2015.txt", header=TRUE, row.names=NULL)
+
+#Load CLEF2016 Varied
+trecEvalResult <- read.table("/Volumes/Data/Github/adcs2016_chs_fields/adcs2016_chs_fieldSelection/trecEvalTuneVaried/trecDetailResultTunedVaried_Clef2016.txt", header=TRUE, row.names=NULL)
+
+#Load results for each weigthing scheme
+titleOnlyResults = trecEvalResult[grep("01000000", trecEvalResult$schema),]
+bodyOnlyResults = trecEvalResult[grep("00000001", trecEvalResult$schema),]
+
+#Load query length
+queryLength <- read.table("/Volumes/Data/Phd/Data/AdHoc2013-2014_eval/WEB2013-2014_QueryLength.txt", header=TRUE, row.names=NULL)
+
+queryLength <- read.table("/Volumes/Data/Phd/Data/aquaint_eval/Hard2005_QueryLength.txt", header=TRUE, row.names=NULL)
+
+queryLength <- read.table("/Volumes/Data/Phd/Data/clef2015_eval/clef2015_QueryLength.txt", header=TRUE, row.names=NULL)
+
+queryLength <- read.table("/Volumes/Data/Phd/Data/clef2016_eval/clef2016_QueryLength.txt", header=TRUE, row.names=NULL)
+
+# ~~~~ aggregate results MAX
+#aggregate the results to get the best results of each query
+bestResults = aggregate(titleOnlyResults[, 3:7],list(titleOnlyResults$QueryNum),max)
+
+bestResults = aggregate(bodyOnlyResults[, 3:7],list(bodyOnlyResults$QueryNum),max)
+
+
+#Add the results table with query length
+bestResults = merge(bestResults,queryLength,by.x="Group.1", by.y="QueryNum")
+
+# ~~~~ Analyze distribution of performance for each query using box plot and then over lay the box plot with mean performance for each query length group.
+
+# chart setup
+lW = 1.5
+w = 8
+h = 5
+margin=c(5,4,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+par(mar=margin)
+
+#Aggregate mean length
+meanPerLength = aggregate(bestResults[, 2:6], list(bestResults$TermCount),mean)
+
+#Box Plot performance of each query
+boxplot(ndcg1000~factor(TermCount), data=bestResults, xlab="Query length", ylab="nDCG@1000", varwidth=TRUE)
+
+#Overlay the mean performance on the box plot
+points(factor(meanPerLength$Group.1),meanPerLength$ndcg1000, cex=.8, pch=16, col="blue") 
+
+#Draw linear model based on the mean performance
+abline(lm(meanPerLength$ndcg1000 ~ meanPerLength$Group.1), col="blue")
+
+#Draw label for correlation
+corLabel =bquote("Corr(Length," ~ mu~"(NDCG@1000))=" ~  .(round(cor(meanPerLength$ndcg1000,meanPerLength$Group.1),4)))
+
+#WEB2013-2014
+text(7.5,0.5, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+#HARD2005
+text(5.5,0.6, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+#CLEF2015
+text(10.5,0.55, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+#CLEF2016
+text(22,0.55, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+
+#Save to PDF for NDCG1000 Varied
+dev.copy(pdf,paste(outputPath, "Box_QueryLength_NDCG1000_WEB2013-2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "Box_QueryLength_NDCG1000_HARD2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "Box_QueryLength_NDCG1000_CLEF2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "Box_QueryLength_NDCG1000_CLEF2016.pdf", sep=""), width=w, height=h)
+dev.off()
+
+# ~~~~ aggregate results MEAN the MAX
+#Aggregate Mean per Query Length (Term Count)
+meanPerLength = aggregate(bestResults[, 2:6], list(bestResults$TermCount),mean)
+
+# chart setup
+lW = 1.5
+w = 8
+h = 5
+margin=c(5,4,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+par(mar=margin)
+
+#Plot results
+plot(meanPerLength$Group.1, meanPerLength$ndcg1000, xlab="Query Length" , ylab="NDCG@100")
+abline(lm(meanPerLength$ndcg1000 ~ meanPerLength$Group.1))
+
+#Display Correlation to plot
+#WEB2013-2014
+text(6,0.12,paste("Correlation(Length, NDCG@1000) =",round(cor(meanPerLength$ndcg1000,meanPerLength$Group.1),4)))
+
+#HARD2005
+text(2.1,0.05,paste("Correlation(Length, NDCG@1000) =",round(cor(meanPerLength$ndcg1000,meanPerLength$Group.1),4)))
+
+#CLEF2015
+text(7,0.6,paste("Correlation(Length, NDCG@1000) =",round(cor(meanPerLength$ndcg1000,meanPerLength$Group.1),4)))
+
+#CLEF2016
+text(15,0.18,paste("Correlation(Length, NDCG@1000) =",round(cor(meanPerLength$ndcg1000,meanPerLength$Group.1),4)))
+
+
+#Save to PDF for NDCG1000 Varied
+dev.copy(pdf,paste(outputPath, "corQueryLength_NDCG1000_WEB2013-2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "corQueryLength_NDCG1000_HARD2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "corQueryLength_NDCG1000_CLEF2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "corQueryLength_NDCG1000_CLEF2016.pdf", sep=""), width=w, height=h)
+dev.off()
+
+# ************
+
+
+## Compare optimal query set-based boosting VS optimal query by query boosting. 
+
+
+# load collections 
+```
+trecResultWeb <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecDetailResultTuned_web2013-2014.txt", header=TRUE, row.names=NULL)
+
+trecResultHard <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecResultSummaryTuned_aquaint_hard2005.txt", header=TRUE, row.names=NULL)
+
+trecResultClef2015 <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecDetailResultTuned_Clef2015.txt", header=TRUE, row.names=NULL)
+
+trecResultClef2016 <- read.table("/Volumes/Data/Phd/Data/trecEvalTune/trecDetailResultTuned_Clef2016.txt", header=TRUE, row.names=NULL)
+```
+
+# get average performance for each boosting schema and then get the best set-based boosting
+```
+avgScoresWeb = aggregate(trecResultWeb[,3:7],list(trecResultWeb$schema), mean)
+bestSetBaseWeb = avgScoresWeb[which.max(avgScoresWeb$ndcg1000),]
+
+avgScoresHard = aggregate(trecResultHard[,3:7],list(trecResultHard$schema), mean)
+bestSetBaseHard = avgScoresHard[which.max(avgScoresHard$ndcg1000),]
+
+avgScoresClef2015 = aggregate(trecResultClef2015[,3:7],list(trecResultClef2015$schema), mean)
+bestSetBaseClef2015 = avgScoresClef2015[which.max(avgScoresClef2015$ndcg1000),]
+
+avgScoresClef2016 = aggregate(trecResultClef2016[,3:7],list(trecResultClef2016$schema), mean)
+bestSetBaseClef2016 = avgScoresClef2016[which.max(avgScoresClef2016$ndcg1000),]
+
+bestSetBases = rbind(bestSetBaseWeb, bestSetBaseHard, bestSetBaseClef2015, bestSetBaseClef2016)
+```
+
+# get the optimal performance query by query boosting
+```
+bestResultPerQueryWeb = aggregate(trecResultWeb[,3:7],list(trecResultWeb$QueryNum), max)
+avgBestResultPerQueryWeb = colMeans(bestResultPerQueryWeb[,2:6])
+
+bestResultPerQueryHard = aggregate(trecResultHard[,3:7],list(trecResultHard$queryNum), max)
+avgBestResultPerQueryHard = colMeans(bestResultPerQueryHard[,2:6])
+
+bestResultPerQueryClef2015 = aggregate(trecResultClef2015[,3:7],list(trecResultClef2015$QueryNum), max)
+avgBestResultPerQueryClef2015 = colMeans(bestResultPerQueryClef2015[,2:6])
+
+bestResultPerQueryClef2016 = aggregate(trecResultClef2016[,3:7],list(trecResultClef2016$QueryNum), max)
+avgBestResultPerQueryClef2016 = colMeans(bestResultPerQueryClef2016[,2:6])
+
+bestResultsPerQuery = rbind(t(data.frame(avgBestResultPerQueryWeb)), t(data.frame(avgBestResultPerQueryHard)), t(data.frame(avgBestResultPerQueryClef2015)), t(data.frame(avgBestResultPerQueryClef2016)))
+```
+
+

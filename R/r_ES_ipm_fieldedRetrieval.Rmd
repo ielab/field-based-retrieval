@@ -1,0 +1,1246 @@
+---
+title: "R IPM Fielded Retrieval"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This scripts to analize fielded retrieval for IPM. using alpha variable for tuning boosting scheme. 
+S (q,d) = alpha.St(q,d) + (1-alpha).Sb(q,d)
+
+# ********************************************************************************************
+## Analysis Tuning Boost Scheme Results
+# This explore performance from tuning boost schema results using uniform b = 0.75 and K = 1.2
+# ********************************************************************************************
+```{r }
+rm(list = ls())
+dataFolder = "../data/"
+outputPath = "../latex_irj/"
+task = "Clef2016" #options: Hard2003, Hard2005, Web, Clef2015, Clef2016
+
+# Load Trec eval results
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_", task, ".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+avgScores = aggregate(trecEvalResult[,4:8],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores)[2] <- "alpha"
+
+
+# UNIFIELD - Load Trec eval results from unifield index where title and body are merged as one field.
+# this non-field based retrieval will be used as "baseline" 
+uniEvalResult <- read.table(paste("../data/evalTuneBvaried_", task,"_unifield.txt", sep = ""), header=TRUE, row.names=NULL)
+
+uniAvgScores = aggregate(uniEvalResult[,4:8],list(uniEvalResult$schema, uniEvalResult$b), mean)
+colnames(uniAvgScores)[2] <- "b"
+defUniAvgScores = uniAvgScores[uniAvgScores$b == 0.75, ]
+
+# General Chart Setup
+lW = 2.5
+w = 8
+h = 6
+
+# Line Plot performance alpha
+# Lines/dot Plot
+
+xrange <- range(as.numeric(avgScores$alpha))
+yrange <- range(c(avgScores$p10, avgScores$ndcg10, avgScores$map, avgScores$bpref))
+
+margin=c(3,3,1,1)
+cols <- c("blue", "red", "green4", "orange")
+ltys <- c(1,2,3,4)
+pchs <- c(1,2,3,4)
+lbls <- c("P@10","nDCG@10","MAP","BPREF")
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+
+box(lty=1, col='black')
+axis(side=1, at=avgScores$alpha)
+axis(side=2, at=seq(round(min(yrange),3), round( max(yrange),3)+0.01,by=round((max(yrange)-min(yrange))/7,3)))
+
+lines(avgScores$alpha, avgScores$p10, type="b", lwd=lW, lty=ltys[1], pch=1, col=cols[1])
+lines(avgScores$alpha, avgScores$ndcg10, type="b", lwd=lW, lty=ltys[2], pch=2, col=cols[2])
+lines(avgScores$alpha, avgScores$map, type="b", lwd=lW, lty=ltys[3], pch=3, col=cols[3])
+lines(avgScores$alpha, avgScores$bpref, type="b", lwd=lW, lty=ltys[4], pch=4, col=cols[4])
+
+mtext(side=1, expression(alpha), line=2, cex=1.7)
+mtext(side=2, "Evaluation Score", line=2, cex=1.2)
+
+legend("bottomleft", legend=lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=1.2, xpd=TRUE,y.intersp=1, x.intersp=0.5)
+
+# UNIFIELD - add line to represent performance from unifield index
+abline(h=defUniAvgScores$p10, lwd=lW, lty=ltys[1], col=cols[1])
+abline(h=defUniAvgScores$ndcg10, lwd=lW, lty=ltys[2], col=cols[2])
+abline(h=defUniAvgScores$map, lwd=lW, lty=ltys[3], col=cols[3])
+abline(h=defUniAvgScores$bpref, lwd=lW, lty=ltys[4], col=cols[4])
+
+# output
+dev.copy(pdf,paste(outputPath, "performanceByAlpha_", task,".pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+# ************************************************************
+## Bar plot of frequency where each alpha perform best nDCG@10
+# ************************************************************
+```{r }
+require(data.table)
+library(plyr)
+
+rm(list = ls())
+dataFolder = "../data/"
+outputPath = "../latex_irj/"
+task = "Hard2005" #options: Hard2005, Web, Clef2015, Clef2016
+
+
+# Load Trec eval results
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_", task, ".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+# Get rows with the best nDCG10 for each Query Number
+trecEvalResult <- as.data.table(trecEvalResult)
+bestSchemes <- trecEvalResult[trecEvalResult[, .I[ndcg10 == max(ndcg10)], by=QueryNum]$V1]
+
+# Remove rows with nDCG10 = 0 as this means all alpha values perform equally poor for the query
+bestSchemes <-bestSchemes[!(bestSchemes$ndcg10 == 0),]
+
+# Count frequency of each alpha producing the the best nDCG10 and present it as bar plot
+bestFrequency <- count(bestSchemes, "alpha")
+
+margin=c(3,3,1,1)
+par(mar=margin)
+w = 8
+h = 6
+barplot(bestFrequency$freq, names.arg=bestFrequency$alpha, ylim=c(0,max(bestFrequency$freq)+1), cex.axis=1.2)
+mtext(side=1, expression(alpha), line=2, cex=1.7)
+mtext(side=2, "Number of Queries", line=2, cex=1.2)
+box(lty=1, col='black')
+
+# Save plot
+dev.copy(pdf,paste(outputPath, "bestNumberOfQueriesPerAlpha_", task,".pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+
+## Count how many times body only, title only, and title=body scheme perform best ndcg@10
+```{r }
+rm(list = ls())
+
+# Load Trec eval results
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Hard2005.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Web.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Clef2015.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Clef2016.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+
+# prepare data
+titleOnly=trecEvalResult[trecEvalResult$alpha==1,]
+bodyOnly=trecEvalResult[trecEvalResult$alpha==0,]
+titleBody=trecEvalResult[trecEvalResult$alpha==0.5,]
+              
+# compare the best ndcg@10            
+titleVsBody <- ifelse((titleOnly$ndcg10 == 0 & bodyOnly$ndcg10 == 0 &   titleBody$ndcg10==0),0,
+ifelse((titleOnly$ndcg10 >= bodyOnly$ndcg10 & titleOnly$ndcg10 >=titleBody$ndcg10), 1, 
+ifelse((bodyOnly$ndcg10 >= titleOnly$ndcg10 & bodyOnly$ndcg10 >=titleBody$ndcg10), 2, 3)))
+
+# get count of each scheme
+stat <- table(titleVsBody)
+
+# General Chart Setup
+lW = 1.5
+w = 8
+h = 3
+margin=c(3,1,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/latex_irj/"
+
+xrange <- range(seq(1,length(titleVsBody),1))
+yrange <- range(c(0,1,2,3))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+box(lty=1, col='black')
+axis(side=1, at=seq(ceiling(length(titleVsBody)/10),length(titleVsBody), ceiling(length(titleVsBody)/10)))
+
+lines(seq(1,length(titleVsBody), 1),titleVsBody, type="p", lwd=lW, lty=1, col="blue", pch=20)
+
+mtext(side=1, "Query", line=2)
+
+# add labels
+text(x=length(titleVsBody)/2,y=2.8, paste("Title = Body is best, Freq. ", stat[4], "(",round(stat[4]*100/length(titleVsBody),0), "%)"))
+
+text(x=length(titleVsBody)/2,y=1.8, paste("Body only is best, Freq. ", stat[3], "(",round(stat[3]*100/length(titleVsBody),0), "%)"))
+
+text(x=length(titleVsBody)/2,y=0.8, paste("Title only is best, Freq. ", stat[2], "(",round(stat[2]*100/length(titleVsBody),0), "%)"))
+
+text(x=length(titleVsBody)/2,y=0.2, paste("All nDCG@10 = 0, Freq. ", stat[1], "(",round(stat[1]*100/length(titleVsBody),0), "%)"))
+
+# Save comparison of times  body only, title only, and title=body scheme perform best ndcg@10
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_clef2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+# ******************************************
+## Plot number of unjudged of all collection
+# ******************************************
+```{r }
+rm(list = ls())
+dataFolder = "../data/"
+outputPath = "../latex_irj/"
+
+# Load Trec eval results
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_Hard2005.txt", sep = ""), header=TRUE, row.names=NULL)
+trecEvalResult$alpha = trecEvalResult$alpha/10
+avgScores_hard = aggregate(trecEvalResult[,4:9],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores_hard)[2] <- "alpha"
+
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_Web.txt", sep = ""), header=TRUE, row.names=NULL)
+trecEvalResult$alpha = trecEvalResult$alpha/10
+avgScores_web = aggregate(trecEvalResult[,4:9],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores_web)[2] <- "alpha"
+
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_Clef2015.txt", sep = ""), header=TRUE, row.names=NULL)
+trecEvalResult$alpha = trecEvalResult$alpha/10
+avgScores_clef2015 = aggregate(trecEvalResult[,4:9],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores_clef2015)[2] <- "alpha"
+
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_Clef2016.txt", sep = ""), header=TRUE, row.names=NULL)
+trecEvalResult$alpha = trecEvalResult$alpha/10
+avgScores_clef2016 = aggregate(trecEvalResult[,4:9],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores_clef2016)[2] <- "alpha"
+
+# General Chart Setup
+lW = 2.5
+w = 8
+h = 6
+
+# Line Plot unjudged documents per alpha
+xrange <- range(as.numeric(avgScores_hard$alpha))
+yrange <- range(c(avgScores_hard$unjudged, avgScores_web$unjudged, avgScores_clef2015$unjudged, avgScores_clef2016$unjudged))
+
+margin=c(3,3,1,1)
+cols <- c("blue", "red", "green4", "orange")
+ltys <- c(1,2,3,4)
+pchs <- c(15,16,17,18)
+lbls <- c("HARD2005","WEB2013-2014","CLEF2015","CLEF2016")
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+
+box(lty=1, col='black')
+axis(side=1, at=avgScores_hard$alpha)
+axis(side=2, at=seq(round(min(yrange),3), round( max(yrange),3)+0.01,by=round((max(yrange)-min(yrange))/7,3)))
+
+lines(avgScores_hard$alpha, avgScores_hard$unjudged, type="b", lwd=lW, lty=ltys[1], pch=pchs[1], col=cols[1])
+lines(avgScores_web$alpha, avgScores_web$unjudged, type="b", lwd=lW, lty=ltys[2], pch=pchs[2], col=cols[2])
+lines(avgScores_clef2015$alpha, avgScores_clef2015$unjudged, type="b", lwd=lW, lty=ltys[3], pch=pchs[3], col=cols[3])
+lines(avgScores_clef2016$alpha, avgScores_clef2016$unjudged, type="b", lwd=lW, lty=ltys[4], pch=pchs[4], col=cols[4])
+
+mtext(side=1, expression(alpha), line=2, cex=1.7)
+mtext(side=2, "Number of Unjudged Results", line=2, cex=1.2)
+
+legend(x=0.0, y=max(yrange), legend=lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=1.2, xpd=TRUE,y.intersp=2, x.intersp=0.5)
+
+# Save Plot unjudged documents per alpha
+dev.copy(pdf,paste(outputPath, "unjudgedDocuments_TuneBoost.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+
+
+## Analysis of nDCG@10 Detail per query 
+```{r }
+rm(list = ls())
+
+# Load Trec eval results
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Hard2005.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Web.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Clef2015.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Clef2016.txt", header=TRUE, row.names=NULL)
+
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+titleOnly=trecEvalResult[trecEvalResult$alpha==1,]
+bodyOnly=trecEvalResult[trecEvalResult$alpha==0,]
+titleBody=trecEvalResult[trecEvalResult$alpha==0.5,]
+titleBoost=trecEvalResult[trecEvalResult$alpha==0.8,]
+bodyBoost=trecEvalResult[trecEvalResult$alpha==0.2,]
+
+# get list of query ids
+queries=unique(trecEvalResult$QueryNum)
+
+# General Chart Setup
+lW = 1.5
+w = 8
+h = 4
+margin=c(5,3,1,1)
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title")
+cols <- c("blue", "orange", "gray40", "blue","orange")
+ltys <- c(0,0,0,0,0)
+pchs <- c(2,5,3,6,0)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/latex_irj/"
+
+# Plot nDCG@10 Detail per query
+
+xrange <- range(c(factor(queries)))
+yrange <- range(c(0,1))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+box(lty=1, col='black')
+axis(side=1, at=factor(queries))
+axis(side=2, at=seq(0, 1,by=0.2))
+
+lines(factor(queries), titleOnly$ndcg10, type="o", lwd=lW, pch=pchs[1], lty=ltys[1], col=cols[1])
+lines(factor(queries), bodyOnly$ndcg10, type="o", lwd=lW, pch=pchs[2], lty=ltys[2], col=cols[2])
+lines(factor(queries), titleBody$ndcg10, type="o", lwd=lW, pch=pchs[3], lty=ltys[3], col=cols[3])
+lines(factor(queries), titleBoost$ndcg10, type="o", lwd=lW, pch=pchs[4],lty=ltys[4], col=cols[4])
+lines(factor(queries), bodyBoost$ndcg10, type="o", lwd=lW, pch=pchs[5], lty=ltys[5], col=cols[5])
+
+mtext(side=1, "Query", line=2)
+mtext(side=2, "nDCG @ 10", line=2)
+
+# Save Detail Query by Query nDCG10 for Web2013_2014
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 12, inset= c(0,-0.30), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailNDCG10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+# Save Detail Query by Query nDCG10 for HARD2005
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 8, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailNDCG10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+# Save Detail Query by Query nDCG10 for CLEF2015
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 10, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailNDCG10_CLEF2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+# Save Detail Query by Query nDCG10 for CLEF2016
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 40, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailNDCG10_CLEF2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+
+## ********************************************************************************
+## Analysis Performance gap of each boosting scheme based on nDCG@10 for each query 
+## ********************************************************************************
+```{r }
+rm(list = ls())
+task = "Hard2005"  #task options: Hard2005, Web, Clef2015, Clef2016
+
+outputPath = "../latex_irj/"
+dataPath = "../data/"
+
+# Load Trec eval results
+trecEvalResult <- read.table(paste(dataPath, "evalTuneBoost_", task, ".txt", sep=""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+titleOnly=trecEvalResult[trecEvalResult$alpha==1,]
+bodyOnly=trecEvalResult[trecEvalResult$alpha==0,]
+titleBody=trecEvalResult[trecEvalResult$alpha==0.5,]
+titleBoost=trecEvalResult[trecEvalResult$alpha==0.8,]
+bodyBoost=trecEvalResult[trecEvalResult$alpha==0.2,]
+
+# combine results from various schemes into one dataframe
+combinedNdcg10 = cbind(titleOnly[,c("QueryNum", "ndcg10")], bodyOnly$ndcg10, titleBody$ndcg10, titleBoost$ndcg10, bodyBoost$ndcg10)
+colnames(combinedNdcg10) = c("QueryNum", "titleOnly", "bodyOnly", "titleBody", "titleBoost", "bodyBoost")
+
+# Scrub the combined data by removing rows where all schemes performed 0.000
+combinedNdcg10 = subset(combinedNdcg10, (titleOnly != 0 & bodyOnly != 0 & titleBody != 0 & titleBoost != 0 & bodyBoost != 0))
+
+# get the min, max and gap performance score
+combinedNdcg10 = transform(combinedNdcg10, min = pmin(titleOnly, bodyOnly, titleBody, titleBoost, bodyBoost))
+combinedNdcg10 = transform(combinedNdcg10, max = pmax(titleOnly, bodyOnly, titleBody, titleBoost, bodyBoost))
+combinedNdcg10$gap = combinedNdcg10$max - combinedNdcg10$min
+combinedNdcg10$minGap = 0
+combinedNdcg10 = combinedNdcg10[order(combinedNdcg10$gap, decreasing=TRUE),]
+
+# General Chart Setup
+lW = 1
+w = 8
+h = 4
+margin=c(3,3,1,1)
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title")
+cols <- c("blue", "orange", "gray40", "blue","orange")
+ltys <- c(0,0,0,0,0)
+pchs <- c(2,5,3,6,0)
+symbolSize = 0.6
+
+# Plot nDCG@10 Detail per query
+par(mar=margin)
+combinedNdcg10$bar = barplot(combinedNdcg10$gap, ylim=c(-0.02,1), col="white")
+box(lty=1, col='black')
+
+points(x=combinedNdcg10$bar, y=combinedNdcg10$titleOnly-combinedNdcg10$min, type="o", lwd=lW, pch=pchs[1], col=cols[1], lty=0, cex=symbolSize)
+points(x=combinedNdcg10$bar, y=combinedNdcg10$bodyOnly-combinedNdcg10$min, type="o", lwd=lW, pch=pchs[2], col=cols[2], lty=0, cex=symbolSize)
+points(x=combinedNdcg10$bar, y=combinedNdcg10$titleBody-combinedNdcg10$min, type="o", lwd=lW, pch=pchs[3], col=cols[3], lty=0, cex=symbolSize)
+points(x=combinedNdcg10$bar, y=combinedNdcg10$titleBoost-combinedNdcg10$min, type="o", lwd=lW, pch=pchs[4], col=cols[4], lty=0, cex=symbolSize)
+points(x=combinedNdcg10$bar, y=combinedNdcg10$bodyBoost-combinedNdcg10$min, type="o", lwd=lW, pch=pchs[5], col=cols[5], lty=0, cex=symbolSize)
+
+mtext(side=1, "Query", line=0.5, font.lab=2)
+mtext(side=2, "nDCG@10 Gap", line=2, font.lab=2)
+
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= nrow(combinedNdcg10)/10, inset= c(0,-0.16), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=1.00, seg.len=0.5, x.intersp=0.0)
+
+# Save plot
+dev.copy(pdf,paste(outputPath, "gapNDCG10_", task,".pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+
+# ********************************************************************************************
+## Analysis Tuning Boost Scheme Results on Navigational VS Non Navigational Queries 
+# This explore performance from tuning boost schema results using uniform b = 0.75 and K = 1.2
+# ********************************************************************************************
+```{r }
+rm(list = ls())
+outputPath = "../latex_irj/"
+dataFolder = "../data/"
+
+# Load Trec eval results for NAVIGATIONAL queries with relevance treshold = 4
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_Web_Navigational.txt", sep =""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+navQueries <- c(202,223,'227','257','265','266','269','273','285','298')
+results_Nav <- trecEvalResult[trecEvalResult$QueryNum %in% navQueries, ]
+
+# Load Trec eval results for ADHOC queries with relevance treshold = 1
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_Web.txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+results_NonNav <- trecEvalResult[!trecEvalResult$QueryNum %in% navQueries, ]
+
+# Separate the Navigational and the Non-Navigational queries
+avgRr_Nav <- aggregate(results_Nav[,c(4,5,6,7,8,11)],list(results_Nav$schema, results_Nav$alpha), mean)
+avgRr_NonNav <- aggregate(results_NonNav[,c(4,5,6,7,8,11)],list(results_NonNav$schema, results_NonNav$alpha), mean)
+
+colnames(avgRr_Nav)[2] <- "alpha"
+colnames(avgRr_NonNav)[2] <- "alpha"
+
+# General Chart Setup
+lW = 2.5
+w = 8
+h = 6
+
+# Line Plot performance alpha
+xrange <- range(as.numeric(avgRr_NonNav$alpha))
+yrange <- range(c(avgRr_Nav$rr, avgRr_NonNav$rr))
+
+margin=c(3,3,1,1)
+cols <- c("red", "blue")
+ltys <- c(2,1)
+pchs <- c(16,15)
+lbls <- c("Adhoc","Navigational")
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+
+box(lty=1, col='black')
+axis(side=1, at=avgRr_NonNav$alpha)
+axis(side=2, at=seq(round(min(yrange),3), round( max(yrange),3)+0.01,by=round((max(yrange)-min(yrange))/7,3)))
+
+lines(avgRr_NonNav$alpha, avgRr_NonNav$rr, type="b", lwd=lW, lty=ltys[1], pch=pchs[1], col=cols[1])
+lines(avgRr_Nav$alpha, avgRr_Nav$rr, type="b", lwd=lW, lty=ltys[2], pch=pchs[2], col=cols[2])
+
+mtext(side=1, expression(alpha), line=2)
+mtext(side=2, "Reciprocal Rank", line=2)
+
+legend(x=0, y=0.4, legend=lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=1.2, xpd=TRUE,y.intersp=2, x.intersp=0.5)
+
+# Save Plot
+dev.copy(pdf,paste(outputPath, "rr_Navigational.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+# ***************************************************************
+## Analysis of tuning B title parameter using box plot 
+# ***************************************************************
+```{r }
+rm(list = ls())
+outputPath = "../latex_irj/"
+dataFolder = "../data/"
+task = "Clef2016"  #task options: Hard2005, Web, Clef2015, Clef2016
+
+# Load Trec eval results
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBvaried_", task,".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+avgScores = aggregate(trecEvalResult[,6:10],list(trecEvalResult$schema, trecEvalResult$alpha, trecEvalResult$bt, trecEvalResult$bb), mean)
+colnames(avgScores)[2] <- "alpha"
+colnames(avgScores)[3] <- "bt"
+colnames(avgScores)[4] <- "bb"
+
+w = 8
+h = 6
+margin=c(5,3,1,1)
+lW = 1.5
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title", 
+          "Best of All", "Significant Best")
+cols <- c("blue", "orange", "darkred", "blue","orange", "purple", "purple")
+ltys <- c(0,0,0,0,0,0)
+pchs <- c(2,5,1,6,0,4,8)
+
+# Box Plot tuning B Title and  test significance between best of all runs to best of each B title value
+par(mar=margin)
+boxplot(ndcg10~factor(bt), data=avgScores)
+
+bestAll = avgScores[which.max(avgScores$ndcg10),]
+bestAll_run = trecEvalResult[trecEvalResult$alpha == bestAll$alpha & 
+                             trecEvalResult$bt == bestAll$bt &
+                             trecEvalResult$bb == bestAll$bb,]
+points((bestAll$bt*20)+1, bestAll$ndcg10, pch=pchs[6], col=cols[6], lwd=lW, cex=1.5)
+
+for(i in 1:21)
+{
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 1,]
+  bestTitleOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleOnly$ndcg10, pch=pchs[1],   col=cols[1], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0,]
+  bestBodyOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyOnly$ndcg10, pch=pchs[2],   col=cols[2], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0.5,]
+  bestTitleBody = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBody$ndcg10, pch=pchs[3],   col=cols[3], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0.8,]
+  bestTitleBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBoost$ndcg10, pch=pchs[4],   col=cols[4], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0.2,]
+  bestBodyBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyBoost$ndcg10, pch=pchs[5],   col=cols[5], lwd=lW)
+  
+  if(i != (bestAll$bt*20)+1)
+  {
+    temp = avgScores[avgScores$bt == (i-1)/20,]
+    bestI = temp[which.max(temp$ndcg10),]
+    bestI_run = trecEvalResult[trecEvalResult$alpha == bestI$alpha & 
+                               trecEvalResult$bt == bestI$bt &
+                               trecEvalResult$bb == bestI$bb,]
+    sig = t.test(bestAll_run$ndcg10,bestI_run$ndcg10,paired=TRUE,two.sided=TRUE)$p.value
+    if(sig <= 0.05)
+    {
+      points(i, bestI$ndcg10, pch=pchs[7],   col=cols[7], lwd=lW)
+    }
+  }
+}
+
+mtext(side=1, "B title", line=2)
+mtext(side=2, "nDCG@10", line=2)
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=1, seg.len=1, x.intersp=0.005, y.intersp=0.5, inset= c(0,-0.22),text.width= 3)
+
+
+# Save Plot
+dev.copy(pdf,paste(outputPath, "TuneBtitle_NDCG10_", task,".pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+# ***************************************************************
+## Analysis of tuning B body parameter using box plot 
+# ***************************************************************
+```{r }
+rm(list = ls())
+outputPath = "../latex_irj/"
+dataFolder = "../data/"
+task = "Clef2016"  #task options: Hard2005, Web, Clef2015, Clef2016
+
+# Load Trec eval results
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBvaried_", task,".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+avgScores = aggregate(trecEvalResult[,6:10],list(trecEvalResult$schema, trecEvalResult$alpha, trecEvalResult$bt, trecEvalResult$bb), mean)
+colnames(avgScores)[2] <- "alpha"
+colnames(avgScores)[3] <- "bt"
+colnames(avgScores)[4] <- "bb"
+
+w = 8
+h = 6
+margin=c(5,3,1,1)
+lW = 1.5
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title", 
+          "Best of All", "Significant Best")
+cols <- c("blue", "orange", "darkred", "blue","orange", "purple", "purple")
+ltys <- c(0,0,0,0,0,0)
+pchs <- c(2,5,1,6,0,4,8)
+
+
+# Box Plot tuning B Body
+par(mar=margin)
+boxplot(ndcg10~factor(bb), data=avgScores)
+
+bestAll = avgScores[which.max(avgScores$ndcg10),]
+bestAll_run = trecEvalResult[trecEvalResult$alpha == bestAll$alpha & 
+                             trecEvalResult$bt == bestAll$bt &
+                             trecEvalResult$bb == bestAll$bb,]
+points((bestAll$bb*20)+1, bestAll$ndcg10, pch=pchs[6], col=cols[6], lwd=lW, cex=1.5)
+
+for(i in 1:21)
+{
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 1,]
+  bestTitleOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleOnly$ndcg10, pch=pchs[1],   col=cols[1], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0,]
+  bestBodyOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyOnly$ndcg10, pch=pchs[2],   col=cols[2], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0.5,]
+  bestTitleBody = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBody$ndcg10, pch=pchs[3],   col=cols[3], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0.8,]
+  bestTitleBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBoost$ndcg10, pch=pchs[4],   col=cols[4], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0.2,]
+  bestBodyBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyBoost$ndcg10, pch=pchs[5],   col=cols[5], lwd=lW)
+  
+  if(i != (bestAll$bb*20)+1)
+  {
+    temp = avgScores[avgScores$bb == (i-1)/20,]
+    bestI = temp[which.max(temp$ndcg10),]
+    bestI_run = trecEvalResult[trecEvalResult$alpha == bestI$alpha & 
+                               trecEvalResult$bt == bestI$bt &
+                               trecEvalResult$bb == bestI$bb,]
+    sig = t.test(bestAll_run$ndcg10,bestI_run$ndcg10,paired=TRUE,two.sided=TRUE)$p.value
+    if(sig <= 0.05)
+    {
+      points(i, bestI$ndcg10, pch=pchs[7],   col=cols[7], lwd=lW)
+    }
+  }
+}
+
+mtext(side=1, "B body", line=2)
+mtext(side=2, "nDCG@10", line=2)
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=1, seg.len=1, x.intersp=0.005, y.intersp=0.5, inset= c(0,-0.22),text.width= 3)
+
+# Save Tuning B Body
+dev.copy(pdf, paste(outputPath, "TuneBbody_NDCG10_", task,".pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+# ********************************************************************************
+## Compare best performance between default B parameter and best tuned B parameter
+# ********************************************************************************
+```{r }
+rm(list = ls())
+dataFolder = "../data/"
+task = "Clef2016"  #task options: Hard2005, Web, Clef2015, Clef2016
+
+# Load Trec eval results from default B parameter
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBoost_", task, ".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+avgScores = aggregate(trecEvalResult[,4:8],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores)[1] <- "schema"
+colnames(avgScores)[2] <- "alpha"
+
+DefaultBestP10 = avgScores[which.max(avgScores$p10),]
+ResultsDefaultP10 = trecEvalResult[trecEvalResult$schema == DefaultBestP10$schema,]
+print(DefaultBestP10)
+
+DefaultBestNDCG10 = avgScores[which.max(avgScores$ndcg10),]
+ResultsDefaultNDCG10 = trecEvalResult[trecEvalResult$schema == DefaultBestNDCG10$schema,]
+print(DefaultBestNDCG10)
+
+DefaultBestMAP = avgScores[which.max(avgScores$map),]
+ResultsDefaultMAP = trecEvalResult[trecEvalResult$schema == DefaultBestMAP$schema,]
+print(DefaultBestMAP)
+
+DefaultBestBPREF = avgScores[which.max(avgScores$bpref),]
+ResultsDefaultBpref = trecEvalResult[trecEvalResult$schema == DefaultBestBPREF$schema,]
+print(DefaultBestBPREF)
+
+
+
+# Load Trec eval results from Tuning B parameters
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBvaried_", task, ".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+avgScores = aggregate(trecEvalResult[,6:10],list(trecEvalResult$schema, trecEvalResult$alpha, trecEvalResult$bt, trecEvalResult$bb), mean)
+colnames(avgScores)[1] <- "schema"
+colnames(avgScores)[2] <- "alpha"
+colnames(avgScores)[3] <- "bt"
+colnames(avgScores)[4] <- "bb"
+
+TuneBestP10 = avgScores[which.max(avgScores$p10),]
+ResultsTuneP10 = trecEvalResult[trecEvalResult$schema == TuneBestP10$schema,]
+print(TuneBestP10)
+print(paste("P10 Gain:", round((TuneBestP10$p10[1]-DefaultBestP10$p10[1])*100/DefaultBestP10$p10[1], digits = 2),"%"))
+
+TuneBestNDCG10 = avgScores[which.max(avgScores$ndcg10),]
+ResultsTuneNDCG10 = trecEvalResult[trecEvalResult$schema == TuneBestNDCG10$schema,]
+print(TuneBestNDCG10)
+print(paste("nDCG10 Gain:", round((TuneBestNDCG10$ndcg10[1]-DefaultBestNDCG10$ndcg10[1])*100/DefaultBestNDCG10$ndcg10[1], digits = 2),"%"))
+
+TuneBestMAP = avgScores[which.max(avgScores$map),]
+ResultsTuneMAP = trecEvalResult[trecEvalResult$schema == TuneBestMAP$schema,]
+print(TuneBestMAP)
+print(paste("MAP Gain:", round((TuneBestMAP$map[1]-DefaultBestMAP$map[1])*100/DefaultBestMAP$map[1], digits = 2),"%"))
+
+
+TuneBestBPREF = avgScores[which.max(avgScores$bpref),]
+ResultsTuneBpref = trecEvalResult[trecEvalResult$schema == TuneBestBPREF$schema,]
+print(TuneBestBPREF)
+print(paste("BPREF Gain:", round((TuneBestBPREF$bpref[1]-DefaultBestBPREF$bpref[1])*100/DefaultBestBPREF$bpref[1], digits = 2),"%"))
+
+
+# T-Test default VS tuned
+t.test(ResultsDefaultP10$p10,ResultsTuneP10$p10,paired=TRUE,two.sided=TRUE)$p.value
+
+t.test(ResultsDefaultNDCG10$ndcg10,ResultsTuneNDCG10$ndcg10,paired=TRUE,two.sided=TRUE)$p.value
+
+t.test(ResultsDefaultMAP$map,ResultsTuneMAP$map,paired=TRUE,two.sided=TRUE)$p.value
+
+t.test(ResultsDefaultBpref$bpref,ResultsTuneBpref$bpref,paired=TRUE,two.sided=TRUE)$p.value
+```
+
+
+
+
+
+## Count average length of relevant documents based on qrel
+rm(list = ls())
+# load field length of judged documents then filtered out to include only relevant documents. 
+
+```
+docLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgRelevantDocLength_web2013-2014.txt", header=TRUE, row.names=NULL)
+
+docLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgRelevantDocLength_hard2005.txt", header=TRUE, row.names=NULL)
+
+docLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgRelevantDocLength_clef2015.txt", header=TRUE, row.names=NULL)
+
+docLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgRelevantDocLength_clef2016.txt", header=TRUE, row.names=NULL)
+
+NotRelLength <- docLength[docLength$Rel<1,]
+mean(NotRelLength$TitleLen)
+mean(NotRelLength$BodyLen)
+
+relLength <- docLength[docLength$Rel>=1,]
+mean(relLength$TitleLen)
+mean(relLength$BodyLen)
+```
+
+
+## Count average length of top search results based on the best run after tuning the Btitle and Bbody parameter values
+
+```
+runLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgTopDocLength_web2013-2014.txt", header=TRUE, row.names=NULL)
+
+runLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgTopDocLength_hard2005.txt", header=TRUE, row.names=NULL)
+
+runLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgTopDocLength_clef2015.txt", header=TRUE, row.names=NULL)
+
+runLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgTopDocLength_clef2016.txt", header=TRUE, row.names=NULL)
+
+
+
+runLength <- runLength[runLength$Rank<=10,]
+runLength_rel <- merge(runLength, docLength, by=c("QueryNum","DocId"), all.x=TRUE)
+
+NotRelLength <- runLength_rel[runLength_rel$Rel<1 & !is.na(runLength_rel$Rel),]
+mean(NotRelLength$TitleLen.x)
+mean(NotRelLength$BodyLen.x)
+
+relLength <- runLength_rel[runLength_rel$Rel>=1 & !is.na(runLength_rel$Rel),]
+mean(relLength$TitleLen.x)
+mean(relLength$BodyLen.x)
+
+unjudgedLength <- runLength_rel[is.na(runLength_rel$Rel),]
+mean(unjudgedLength$TitleLen.x)
+mean(unjudgedLength$BodyLen.x)
+```
+
+
+# **************************************************************************************************************
+##Analysis of Uniform VS Adaptive
+#For future work, an interesting direction is to create an adaptive system that able to detect the optimum weigthing scheme and parameter setting for a given query. To measure the advantage of such oracle system we compare the best nDCG@10 score from a single (uniform) weighting scheme and singe parameter B setting. against nDCG@10 score from adaptive systems which find the best scheme for each individual query.
+# **************************************************************************************************************
+```{r }
+rm(list = ls())
+dataFolder = "../data/"
+task = "Web"  #task options: Hard2005, Web, Clef2015, Clef2016
+
+# Load Data
+trecEvalResult <- read.table(paste(dataFolder, "evalTuneBvaried_", task, ".txt", sep = ""), header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+# Get best nDCG@10 of uniform weighting scheme by aggregate mean the data by scheme
+aggByScheme <- aggregate(trecEvalResult[,6:10], by=list(trecEvalResult$schema, trecEvalResult$alpha, trecEvalResult$bt, trecEvalResult$bb), FUN=mean,na.rm=TRUE)
+colnames(aggByScheme) <- c("schema","alpha","bt","bb","map","p10","ndcg10","ndcg1000","bpref")
+bestUniform = max(aggByScheme$ndcg10, na.rm=TRUE)
+
+# Get best nDCG@10 of adaptive weighting scheme by aggregate Max the data by query
+aggByQuery <- aggregate(trecEvalResult[,6:10], by=list(trecEvalResult$QueryNum), FUN=max,na.rm=TRUE)
+bestAdaptive = mean(aggByQuery$ndcg10)
+
+# get improvement
+improvement = (bestAdaptive/bestUniform)*bestUniform*100
+
+print(paste("uniform:", bestUniform, "; adaptive: ", bestAdaptive, "; improvement: ", improvement))
+```
+
+## Test the best results from the uniform and the adaptive
+# get results from the best scheme in uniform
+```
+# **** WEB2013-2014 best scheme: alpha=0.4 Bt=0.5 Bb=0.2       
+uniformResults=trecEvalResult[trecEvalResult$alpha==0.4 & trecEvalResult$bt==0.5 &
+              trecEvalResult$bb==0.2,]
+
+# **** Hard2005 best scheme: alpha=0.4 Bt=1 Bb=0.1       
+uniformResults=trecEvalResult[trecEvalResult$alpha==0.4 & trecEvalResult$bt==1 &
+              trecEvalResult$bb==0.1,]
+              
+# **** Clef2015 best scheme: alpha=0.1 Bt=0.7 Bb=0.2       
+uniformResults=trecEvalResult[trecEvalResult$alpha==0.1 & trecEvalResult$bt==0.7 &
+              trecEvalResult$bb==0.2,]
+
+# **** Clef2016 best scheme: alpha=0.4 Bt=0.9 Bb=0.45       
+uniformResults=trecEvalResult[trecEvalResult$alpha==0.4 & trecEvalResult$bt==0.9 &
+              trecEvalResult$bb==0.45,]
+              
+# **** cross check, the mean of uniformResults should = bestUniform
+mean(uniformResults$ndcg10)
+
+# Two tailed T-Test the best uniform and adaptive
+t.test(uniformResults$ndcg10,aggByQuery$ndcg10,paired=TRUE,two.sided=TRUE)$p.value
+```
+
+
+# Analise proportion of QIT documents for Navigational VS AdHoc Query for WEB collection.
+## Load QIT data
+rm(list = ls())
+```
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/topTuneBoost_Web_alpha5", header=FALSE, row.names=NULL)
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/topTuneBoost_Web_alpha10", header=FALSE, row.names=NULL)
+
+navQueries <- c(202,223,'227','257','265','266','269','273','285','298')
+
+nav_baseline <- baseline[(baseline$V1 %in% navQueries), ]
+nav_titleOnly <- titleOnly[(titleOnly$V1 %in% navQueries), ]
+
+adhoc_baseline <- baseline[!(baseline$V1 %in% navQueries), ]
+adhoc_titleOnly <- titleOnly[!(titleOnly$V1 %in% navQueries), ]
+
+
+nav_qit <- vector('numeric')
+adhoc_qit <- vector('numeric')
+
+# remove meaningless columns
+keeps <- c("V1", "V3","V4","V5")
+
+nav_baseline <- nav_baseline[keeps]
+nav_titleOnly <- nav_titleOnly[keeps]
+
+adhoc_baseline <- adhoc_baseline[keeps]
+adhoc_titleOnly <- adhoc_titleOnly[keeps]
+
+
+# add column titles
+colnames(nav_baseline) <- c("qId","docId","baseRank","baseScore")
+colnames(nav_titleOnly) <- c("qId","docId","titleRank","titleScore")
+
+colnames(adhoc_baseline) <- c("qId","docId","baseRank","baseScore")
+colnames(adhoc_titleOnly) <- c("qId","docId","titleRank","titleScore")
+
+# get the top K rank from the baseline
+nav_queryCount=length(unique(nav_baseline$qId))
+adhoc_queryCount=length(unique(adhoc_baseline$qId))
+
+# populate the qit vector
+for (k in seq(from=10, to=100, by=10))
+{
+  nav_topK <- nav_baseline[nav_baseline$baseRank<=k,]
+  adhoc_topK <- adhoc_baseline[adhoc_baseline$baseRank<=k,]
+  
+  nav_temp <- merge(x=nav_topK, y=nav_titleOnly, by=c("qId","docId"))
+  adhoc_temp <- merge(x=adhoc_topK, y=adhoc_titleOnly, by=c("qId","docId"))
+  
+  nav_qit[k/10] <- (((nrow(nav_temp)/nav_queryCount)/k)*100)
+  adhoc_qit[k/10] <- (((nrow(adhoc_temp)/adhoc_queryCount)/k)*100)
+}
+```
+
+
+# Plot the QIT
+```
+lW = 2.5
+w = 8
+h = 4
+margin=c(3,3,1,1)
+lbls <- c("Navigational", "Adhoc")
+cols <- c("blue", "red")
+ltys <- c(1,2)
+pchs <- c(15,16)
+cexs = 1.4
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/latex_irj/"
+
+xrange <- range(seq(10, 100, by=10))
+yrange <- range(c(40,100))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA)
+axis(side=1, at=seq(10, 100, by=10))
+axis(side=2, at=seq(40, 100, by=10))
+
+lines(seq(10, 100, by=10), nav_qit, type="o", lwd=lW, lty=ltys[1], col=cols[1], pch=pchs[1], cex=cexs)
+lines(seq(10, 100, by=10), adhoc_qit, type="o", lwd=lW, lty=ltys[2], col=cols[2], pch=pchs[2], cex=cexs)
+
+mtext(side=1, "n - Rank Position", line=2)
+mtext(side=2, "Proportion of QIT documents retrieved", line=2)
+
+legend(x=70, y=100,lbls, lty=c(ltys[1],ltys[2]), pch=c(pchs[1],pchs[2]), ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=0.9, seg.len=4, y.intersp=3)
+
+dev.copy(pdf,paste(outputPath, "qit_nav.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+# UNIFIELD - Analyse Unifield performance where title and body are merged into one column
+## UNIFIELD - Analysis of tuning B title and B body parameter using box plot 
+rm(list = ls())
+
+# UNIFIELD - Load Trec eval results
+```
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBvaried_Hard2005_unifield.txt", header=TRUE, row.names=NULL)
+
+avgScores = aggregate(trecEvalResult[,4:8],list(trecEvalResult$schema, trecEvalResult$b), mean)
+colnames(avgScores)[2] <- "b"
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Boxplot body and title field length
+rm(list = ls())
+
+# Load field length data
+```
+fieldLength <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/fieldLength_aquaint.txt", header=FALSE, row.names=NULL, col.names=c('docId','title','body'), sep=",")
+```
+
+# count documents per group of title length
+```
+agg_TitleLength = aggregate(fieldLength[,2],list(fieldLength$title), length)
+colnames(agg_TitleLength) <- c('titleLength','docCount')
+```
+agg_TitleLength = agg_TitleLength[agg_TitleLength$titleLength<=20,]
+
+plot(agg_TitleLength$titleLength, agg_TitleLength$docCount, log="y",type="l")
+
+hist(agg_TitleLength[$docCount])
+
+# box plot title field length
+```
+boxplot(titl)
+```
+
+
+
+# box plot body field length
+```
+boxplot(fieldLength$body)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Analyse correlation between alpha and query length
+# Results shows that there is no correlation between alpha and  query length
+rm(list = ls())
+
+#Load trec eval result, get best results for each query and then merge with
+```
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Web.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Clef2016.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+```
+
+# load and merge  query length data
+```
+queryLength <- read.table("/Volumes/Data/Phd/Data/AdHoc2013-2014_eval/WEB2013-2014_QueryLength.txt", header=TRUE, row.names=NULL)
+
+queryLength <- read.table("/Volumes/Data/Phd/Data/clef2016_eval/clef2016_QueryLength.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult = merge(trecEvalResult,queryLength,by.x="QueryNum", by.y="QueryNum")
+```
+
+# get row with best performance for each query
+```
+require(data.table)
+
+trecEvalResult <- trecEvalResult[trecEvalResult$p10 > 0,]
+tblResults <- as.data.table(trecEvalResult)
+tblBestP10 <- tblResults[tblResults[, .I[p10 == max(p10)], by=QueryNum]$V1]
+
+trecEvalResult <- trecEvalResult[trecEvalResult$ndcg1000 > 0,]
+tblResults <- as.data.table(trecEvalResult)
+tblBestNdcg1000 <- tblResults[tblResults[, .I[ndcg1000 == max(ndcg1000)], by=QueryNum]$V1]
+
+```
+
+# chart setup
+```
+lW = 1.5
+w = 8
+h = 5
+margin=c(5,4,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/latex_irj/"
+par(mar=margin)
+```
+#Box Plot performance of each query
+#Draw linear model based on the mean performance and Draw label for correlation
+```
+boxplot(alpha~factor(TermCount), data=tblBestP10, xlab="Query length", ylab="alpha", varwidth=TRUE)
+abline(lm(tblBestP10$alpha ~ tblBestP10$TermCount), col="blue")
+corLabel =bquote("Corr(Q Length, alpha)=" ~  .(round(cor(tblBestP10$alpha,tblBestP10$TermCount),4)))
+text(5,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+boxplot(alpha~factor(TermCount), data=tblBestNdcg1000, xlab="Query length", ylab="alpha", varwidth=TRUE)
+abline(lm(tblBestNdcg1000$alpha ~ tblBestNdcg1000$TermCount), col="blue")
+corLabel =bquote("Corr(Q Length, alpha)=" ~  .(round(cor(tblBestNdcg1000$alpha,tblBestNdcg1000$TermCount),4)))
+text(7,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+```
+
+
+
+
+## Analyse correlation between alpha and TF Title (term frequency in title)
+# Results shows that there is no correlation between alpha and TF Title or Body.
+rm(list = ls())
+
+#Load trec eval result, get best results for each query 
+```
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Web.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/evalTuneBoost_Clef2016.txt", header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+```
+
+# load and merge  query TTF
+```
+tf <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgTF_web.txt", header=TRUE, row.names=NULL, sep=",")
+
+tf <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/avgTF_clef2016.txt", header=TRUE, row.names=NULL, sep=",")
+
+trecEvalResult = merge(trecEvalResult,tf,by.x="QueryNum", by.y="QueryNum")
+```
+
+# get row with best performance for each query
+```
+require(data.table)
+
+trecEvalResult <- trecEvalResult[trecEvalResult$p10 > 0,]
+tblResults <- as.data.table(trecEvalResult)
+tblBestP10 <- tblResults[tblResults[, .I[p10 == max(p10)], by=QueryNum]$V1]
+
+trecEvalResult <- trecEvalResult[trecEvalResult$ndcg1000 > 0,]
+tblResults <- as.data.table(trecEvalResult)
+tblBestNdcg1000 <- tblResults[tblResults[, .I[ndcg1000 == max(ndcg1000)], by=QueryNum]$V1]
+
+```
+
+# chart setup
+```
+lW = 1.5
+w = 8
+h = 5
+margin=c(5,4,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/latex_irj/"
+par(mar=margin)
+cols <- c("blue", "red", "gray40", "orange")
+ltys <- c(1,2,3,4)
+pchs <- c(15,16,17,18)
+cexs = 1.4
+```
+# Plot best performance of each query to TTF Title
+```
+plot(tblBestNdcg1000$avgTtfTitle, tblBestNdcg1000$alpha, main="WEB2013-2014", xlab="average TF Title", ylab="alpha", pch=19)
+abline(lm(tblBestNdcg1000$alpha ~ tblBestNdcg1000$avgTtfTitle), col="blue")
+corLabel =bquote("Corr(AVG TF Title, alpha)=" ~  .(round(cor(tblBestNdcg1000$alpha,tblBestNdcg1000$avgTtfTitle),4)))
+text(200000,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+
+plot(tblBestNdcg1000$avgTtfTitle, tblBestNdcg1000$alpha, main="CLEF2016", xlab="average TF Title", ylab="alpha", pch=19)
+abline(lm(tblBestNdcg1000$alpha ~ tblBestNdcg1000$avgTtfTitle), col="blue")
+corLabel =bquote("Corr(AVG TF Title, alpha)=" ~  .(round(cor(tblBestNdcg1000$alpha,tblBestNdcg1000$avgTtfTitle),4)))
+text(400000,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+
+```
+
+# Plot best performance of each query to TTF Body
+```
+plot(tblBestP10$avgTtfBody, tblBestP10$alpha, main="WEB2013-2014", xlab="average TF Title", ylab="alpha", pch=19)
+abline(lm(tblBestP10$alpha ~ tblBestP10$avgTtfBody), col="blue")
+corLabel =bquote("Corr(AVG TF Body), alpha)=" ~  .(round(cor(tblBestP10$alpha,tblBestP10$avgTtfBody),4)))
+text(300,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+```
+
+
+
+#Box Plot performance of each query
+#Draw linear model based on the mean performance and Draw label for correlation
+```
+boxplot(alpha~factor(TermCount), data=tblBestP10, xlab="Query length", ylab="alpha", varwidth=TRUE)
+abline(lm(tblBestP10$alpha ~ tblBestP10$TermCount), col="blue")
+corLabel =bquote("Corr(Q Length, alpha)=" ~  .(round(cor(tblBestP10$alpha,tblBestP10$TermCount),4)))
+text(5,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+
+boxplot(alpha~factor(TermCount), data=tblBestNdcg1000, xlab="Query length", ylab="alpha", varwidth=TRUE)
+abline(lm(tblBestNdcg1000$alpha ~ tblBestNdcg1000$TermCount), col="blue")
+corLabel =bquote("Corr(Q Length, alpha)=" ~  .(round(cor(tblBestNdcg1000$alpha,tblBestNdcg1000$TermCount),4)))
+text(7,0.8, corLabel,adj = c(1, NA), col="blue", cex=1.5)
+```
+

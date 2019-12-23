@@ -1,0 +1,783 @@
+---
+title: "Analysis for IPM Journal"
+author: "Jimmy, Guido Zuccon, Bevan Koopman"
+date: "October 14, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+library(ggplot2)
+
+rm(list = ls())
+
+## Description
+This Markdown focus on preparing data for IPM Journal based on the ADCS2016 paper. in this paper, all data comes from elasticsearch 5.1.1 instead of ES 2.3.4 as used in ADCS 2016.
+
+## Proportion of Query in Title
+We are trying to measure the proportion of QIT as also done by Joho et al. We count the number of top rank documents(ranks:10, 20, ...,100) from baseline search (all fields' weight=1) that also listed in the top 1000 documents from title only search.
+We generate the data using mySQL.
+
+# Load QIT data
+****** WEB2013-2014
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/web2013-2014_top_01010001_25.0", header=FALSE, row.names=NULL)
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/web2013-2014_top_01000000_25.0", header=FALSE, row.names=NULL)
+
+****** HARD2005
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/hard2005_top_01000001_25.0", header=FALSE, row.names=NULL)
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/hard2005_top_01000000_25.0", header=FALSE, row.names=NULL)
+
+****** CLEF2015
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/clef2015_top_01010001_25.0", header=FALSE, row.names=NULL)
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/clef2015_top_01000000_25.0", header=FALSE, row.names=NULL)
+
+****** CLEF2016
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/clef2016_top_01010001_25.0", header=FALSE, row.names=NULL)
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/clef2016_top_01000000_25.0", header=FALSE, row.names=NULL)
+
+
+****** Navigational Queries Analysis
+navQueries <- c(202,223,'227','257','265','266','269','273','285','298')
+
+****** All WEB2013-2014 results, run this before obtain the navigational and non-navigational results
+
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/web2013-2014_top_01010001_25.0", header=FALSE, row.names=NULL)
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/web2013-2014_top_01000000_25.0", header=FALSE, row.names=NULL)
+
+******  WEB2013-2014 Navigational results only
+baseline <- baseline[(baseline$V1 %in% navQueries), ]
+titleOnly <- titleOnly[(titleOnly$V1 %in% navQueries), ]
+
+******  WEB2013-2014 NON - Navigational results only
+baseline <- baseline[!(baseline$V1 %in% navQueries), ]
+titleOnly <- titleOnly[!(titleOnly$V1 %in% navQueries), ]
+
+
+****** HARD2005 from ES 2.3.4
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/Aquaint_Hard2015_BaseLine_0101_25.csv", header=TRUE, row.names=NULL, sep=",")
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/Aquaint_Hard2015_HeadlineOnly_0100_25.csv", header=TRUE, row.names=NULL, sep=",")
+
+***** CLEF2016 From ES 2.3.4
+baseline <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/Clef2016_BaseLine_01010001_25.csv", header=TRUE, row.names=NULL, sep=",")
+titleOnly <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/Clef2016_TitleOnly_01000000_25.csv", header=TRUE, row.names=NULL, sep=",")
+
+
+# initialize qit vector for each collection, run this once
+qitWeb <- vector('numeric')
+qitHard <- vector('numeric')
+qitClef2015 <- vector('numeric')
+qitClef2016 <- vector('numeric')
+
+qitWebNav <- vector('numeric')
+qitWebNonNav <- vector('numeric')
+
+# remove meaningless columns, run for every collection
+keeps <- c("V1", "V3","V4","V5")
+baseline <- baseline[keeps]
+titleOnly <- titleOnly[keeps]
+
+# add column titles, run for every collection
+colnames(baseline) <- c("qId","docId","baseRank","baseScore")
+colnames(titleOnly) <- c("qId","docId","titleRank","titleScore")
+
+# get the top K rank from the baseline, run for every collection
+queryCount=length(unique(baseline$qId))
+
+
+
+# populate the qit vector, run this by activating the coresponding collection 
+for (k in seq(from=10, to=100, by=10))
+{
+  topK <- baseline[baseline$baseRank<=k,]
+  temp <- merge(x=topK, y=titleOnly, by=c("qId","docId"))
+  #qitWeb[k/10] <- (((nrow(temp)/queryCount)/k)*100)
+  #qitHard[k/10] <- (((nrow(temp)/queryCount)/k)*100)
+  #qitClef2015[k/10] <- (((nrow(temp)/queryCount)/k)*100)
+  #qitClef2016[k/10] <- (((nrow(temp)/queryCount)/k)*100)
+  qitWebNav[k/10] <- (((nrow(temp)/queryCount)/k)*100)
+  #qitWebNonNav[k/10] <- (((nrow(temp)/queryCount)/k)*100)
+}
+
+
+
+***** Plot QIT
+```
+lW = 2.5
+w = 8
+h = 4
+margin=c(3,3,1,1)
+lbls <- c("WEB2013-2014","HARD2005","CLEF2015","CLEF2016")
+cols <- c("blue", "red", "gray40", "orange")
+ltys <- c(1,2,3,4)
+pchs <- c(15,16,17,18)
+cexs = 1.4
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+
+xrange <- range(seq(10, 100, by=10))
+yrange <- range(c(40,100))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA)
+axis(side=1, at=seq(10, 100, by=10))
+axis(side=2, at=seq(40, 100, by=10))
+
+*** Lines from all collections
+lines(seq(10, 100, by=10), qitWeb, type="o", lwd=lW, lty=ltys[1], col=cols[1], pch=pchs[1], cex=cexs)
+lines(seq(10, 100, by=10), qitHard, type="o", lwd=lW, lty=ltys[2], col=cols[2], pch=pchs[2], cex=cexs)
+lines(seq(10, 100, by=10), qitClef2015, type="o", lwd=lW, lty=ltys[3], col=cols[3], pch=pchs[3], cex=cexs)
+lines(seq(10, 100, by=10), qitClef2016, type="o", lwd=lW, lty=ltys[4], col=cols[4], pch=pchs[4], cex=cexs)
+
+mtext(side=1, "n - Rank Position", line=2)
+mtext(side=2, "Proportion of QIT documents retrieved", line=2)
+
+legend(x=70, y=100, lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=0.9, seg.len=4, y.intersp=3)
+
+
+**** Lines from WEB2013-2014 Navigational and non navigational queries 
+lines(seq(10, 100, by=10), qitWebNav, type="o", lwd=lW, lty=ltys[1], col=cols[1], pch=pchs[1], cex=cexs)
+lines(seq(10, 100, by=10), qitWebNonNav, type="o", lwd=lW, lty=ltys[2], col=cols[2], pch=pchs[2], cex=cexs)
+
+mtext(side=1, "n - Rank Position", line=2)
+mtext(side=2, "Proportion of QIT documents retrieved", line=2)
+
+legend(x=70, y=100,c("Navigational", "Non Navigational"), lty=c(ltys[1],ltys[2]), pch=c(pchs[1],pchs[2]), ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=0.9, seg.len=4, y.intersp=3)
+```
+
+***** Save output QIT all collections
+```
+dev.copy(pdf,paste(outputPath, "qit.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save output QIT WEB2013-2014, Navigational and Non Navigational
+```
+dev.copy(pdf,paste(outputPath, "qit_nav.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+## Count the proportion of QIT in relevant and not relevant top 100 documents
+***** Load QREL WEB2013-2014
+qrel <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/qrels.adhoc2013-2014.txt", header=FALSE, row.names=NULL)
+
+***** Load QREL HARD2005
+qrel <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/TREC2005.qrels.txt", header=FALSE, row.names=NULL)
+
+***** Load QREL CLEF2015
+qrel <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/qrels.eng.clef2015.test.graded.txt", header=FALSE, row.names=NULL)
+
+***** Load QREL CLEF2016
+qrel <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/task1.qrels.30Aug", header=FALSE, row.names=NULL)
+
+
+# remove meaningless columns, run for every collection
+keeps <- c("V1", "V3","V4")
+qrel <- qrel[keeps]
+
+# add column titles, run for every collection
+colnames(qrel) <- c("qId","docId","Rel")
+
+# Separate judged relevant docs (Rel >= 1) from non relevant docs (Rel < 1)
+relDocs <- qrel[qrel$Rel>="1",]
+nonRelDocs <- qrel[qrel$Rel<"1",]
+
+# get baseline and title data frame for each collection from the QIT section. load, remove unused columns, and rename the data frame.
+
+# Proportion of relevant and non-relevant results with QIT based on top 10 results
+k = 10
+
+# get results with QIT
+topK <- baseline[baseline$baseRank<=k,]
+resultsQIT <- merge(x=topK, y=titleOnly, by=c("qId","docId"))
+
+resultsQITrel <- merge(x=resultsQIT, y=relDocs, by=c("qId","docId"))
+resultsQITnonRel <- merge(x=resultsQIT, y=nonRelDocs, by=c("qId","docId"))
+
+print (paste("Relevant QIT: ", nrow(resultsQITrel)/nrow(resultsQIT) ))
+print (paste("Not Relevant QIT: ", nrow(resultsQITnonRel)/nrow(resultsQIT) ))
+
+## Retrieval Effectiveness Boosting Factor 0, 1, 3, 5
+# General Chart Setup
+```
+lW = 2.5
+w = 8
+h = 6
+margin=c(7,3,1,1)
+lbls <- c("Weighted Title", "Weighted Meta", "Weighted Headers", "Weighted Body", "Title Only", "Meta Only", "Headers Only", "Body Only", "Best Combination")
+cols <- c("blue", "red", "gray40", "orange", "blue", "red", "gray40", "orange", "green4")
+ltys <- c(NA,NA,NA,NA,5,5,5,5,4)
+pchs <- c(2,5,3,6,NA,NA,NA,NA,NA)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+```
+
+# Load and Parse Web2013_2014, CLEF2015, CLEF2016
+***** Load data WEB2013-2014
+```
+TrecSummary <- read.csv("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecSummaryResult_Web2013-2014.csv")
+```
+***** Load data CLEF2015
+```
+TrecSummary <- read.csv("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecSummaryResult_Clef2015.csv")
+```
+***** Load data CLEF2016
+```
+TrecSummary <- read.csv("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecSummaryResult_Clef2016.csv")
+```
+
+***** Extract data
+```
+WeightedTitle= subset(TrecSummary[with(TrecSummary, order(title, meta, headers,body)),], meta == 1 & headers == 1 & body == 1, c(title,p10))
+colnames(WeightedTitle)[1] <- "weight"
+
+WeightedMeta= subset(TrecSummary[with(TrecSummary, order(title, meta, headers,body)),], title == 1 & headers == 1 & body == 1, c(meta,p10))
+colnames(WeightedMeta)[1] <- "weight"
+
+WeightedHeaders= subset(TrecSummary[with(TrecSummary, order(title, meta, headers, body)),], title == 1 & meta == 1 & body == 1, c(headers,p10))
+colnames(WeightedHeaders)[1] <- "weight"
+
+WeightedBody= subset(TrecSummary[with(TrecSummary, order(title, meta, headers, body)),], title == 1 & meta == 1 & headers == 1, c(body,p10))
+colnames(WeightedBody)[1] <- "weight"
+
+
+temp= subset(TrecSummary, title==1 & meta==0 & headers==0 & body==0, p10)
+TitleOnly=c(temp, temp, temp, temp)
+
+temp= subset(TrecSummary, title==0 & meta==1 & headers==0 & body==0, p10)
+MetaOnly=c(temp, temp, temp, temp)
+
+temp= subset(TrecSummary, title==0 & meta==0 & headers==1 & body==0, p10)
+HeadersOnly=c(temp, temp, temp, temp)
+
+temp= subset(TrecSummary, title==0 & meta==0 & headers==0 & body==1, p10)
+BodyOnly=c(temp, temp, temp, temp)
+
+bestP10= max(TrecSummary$p10)
+best=c(bestP10, bestP10, bestP10, bestP10)
+```
+
+# Line Plot and Save Output for Web2013-2014, CLEF2015, CLEF2016
+***** Lines/dot Plot
+```
+xrange <- range(WeightedTitle$weight)
+yrange <- range(c(WeightedTitle$p10,WeightedMeta$p10,WeightedHeaders$p10,WeightedBody$p10,TitleOnly$p10,MetaOnly$p10,HeadersOnly$p10,BodyOnly$p10, best))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+box(lty=1, col='black')
+axis(side=1, at=WeightedTitle$weight)
+axis(side=2, at=seq(round(min(yrange),3), round( max(yrange),3)+0.01,by=round((max(yrange)-min(yrange))/7,3)))
+
+lines(WeightedTitle$weight, WeightedTitle$p10, type="p", lwd=lW, pch=pchs[1], col=cols[1])
+lines(WeightedMeta$weight, WeightedMeta$p10, type="p", lwd=lW, pch=pchs[2], col=cols[2])
+lines(WeightedHeaders$weight, WeightedHeaders$p10, type="p", lwd=lW, pch=pchs[3], col=cols[3])
+lines(WeightedBody$weight, WeightedBody$p10, type="p", lwd=lW, pch=pchs[4], col=cols[4])
+
+lines(c(0,1,3,5), TitleOnly, type="l", lwd=lW, lty=ltys[5], col=cols[5])
+lines(c(0,1,3,5), MetaOnly, type="l", lwd=lW, lty=ltys[6], col=cols[6])
+lines(c(0,1,3,5), HeadersOnly, type="l", lwd=lW, lty=ltys[7], col=cols[7])
+lines(c(0,1,3,5), BodyOnly, type="l", lwd=lW, lty=ltys[8], col=cols[8])
+
+lines(c(0,1,3,5), best, type="l", lwd=lW, lty=ltys[9], col=cols[9])
+
+mtext(side=1, "Weight", line=2)
+mtext(side=2, "P @ 10", line=2)
+
+```
+
+***** Save Line Plot output Web2013_2014
+```
+legend("bottom", lbls, lty=ltys, pch=pchs, ncol=3, text.width= 1, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, cex=0.8, seg.len=4, y.intersp=0.8)
+dev.copy(pdf,paste(outputPath, "averageP10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Line Plot output Clef2015
+```
+legend("bottom", lbls, lty=ltys, pch=pchs, ncol=3, text.width= 1, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, cex=0.8, seg.len=4, y.intersp=0.8)
+dev.copy(pdf,paste(outputPath, "averageP10_Clef2015.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Line Plot output Clef2016
+```
+legend("bottom", lbls, lty=ltys, pch=pchs, ncol=3, text.width= 1, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, cex=0.8, seg.len=4, y.intersp=0.8)
+dev.copy(pdf,paste(outputPath, "averageP10_Clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+
+# Bar Plot and Save Ouput Web2013-2014, CLEF2015, CLEF2016
+***** Bar Plot
+# create empty data frame to hold bar plot data
+```
+df <- data.frame(weight = character(), scheme = character(), P10 = numeric())
+
+for (w in c(0,1,3,5))
+{
+  df<-rbind(df, data.frame(weight = toString(w), scheme = "Weighted Title", P10 =  WeightedTitle[WeightedTitle$Weight==w,"P10"]))
+  df<-rbind(df, data.frame(weight = toString(w), scheme = "Weighted Meta", P10 =  WeightedMeta[WeightedMeta$Weight==w,"P10"]))
+  df<-rbind(df, data.frame(weight = toString(w), scheme = "Weighted Headers", P10 =  WeightedHeaders[WeightedHeaders$Weight==w,"P10"]))
+  df<-rbind(df, data.frame(weight = toString(w), scheme = "Weighted Body", P10 =  WeightedBody[WeightedBody$Weight==w,"P10"]))
+}
+
+
+p <- ggplot(data=df, aes(x=weight, y=P10, fill=scheme)) + geom_bar(stat="identity", position=position_dodge()) + theme_minimal()
+
+# set the x axis scale
+p <- p + scale_x_discrete(limits=c("0","1","3","5"))
+
+# set the scale color
+p <- p + scale_fill_manual(values=c("blue", "red", "gray40", "orange"))
+
+# add Title only lines
+p <- p + geom_hline(yintercept=TitleOnly$P10, colour="blue", linetype="dashed")
+# add Meta only lines
+p <- p + geom_hline(yintercept=MetaOnly$P10, colour="red", linetype="dashed")
+# add Headers only lines
+p <- p + geom_hline(yintercept=HeadersOnly$P10, colour="gray40", linetype="dashed")
+# add Body only lines
+p <- p + geom_hline(yintercept=BodyOnly$P10, colour="orange", linetype="dashed")
+
+# add Best Scheme lines
+p <- p + geom_hline(yintercept=bestP10, colour="green4", linetype="dashed")
+
+p
+
+```
+
+***** Save Bar Plot output Web2013_2014
+```
+dev.copy(pdf,paste(outputPath, "averageP10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Bar Plot  output Clef2015
+```
+dev.copy(pdf,paste(outputPath, "averageP10_Clef2015.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Bar Plot  output Clef2016
+```
+dev.copy(pdf,paste(outputPath, "averageP10_Clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+# HARD 2005
+***** Load and Parse data based on weighting scheme of interest HARD2005
+```
+TrecSummary <- read.csv("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecSummaryResult_hard2005.csv")
+
+
+WeightedTitle= subset(TrecSummary[with(TrecSummary, order(title, body)),], body == 1, c(title,p10))
+colnames(WeightedTitle)[1] <- "weight"
+
+WeightedBody= subset(TrecSummary[with(TrecSummary, order(title, body)),], title == 1, c(body,p10))
+colnames(WeightedBody)[1] <- "weight"
+
+temp= subset(TrecSummary, title==1 & body==0, p10)
+TitleOnly=c(temp, temp, temp, temp)
+
+temp= subset(TrecSummary, title==0 & body==1, p10)
+BodyOnly=c(temp, temp, temp, temp)
+
+bestP10= max(TrecSummary$p10)
+best=c(bestP10, bestP10, bestP10, bestP10)
+```
+***** line Plot - Hard 2005
+```
+xrange <- range(WeightedTitle$weight)
+yrange <- range(c(WeightedTitle$p10,WeightedBody$p10,TitleOnly$p10,BodyOnly$p10, best))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+box(lty=1, col='black')
+axis(side=1, at=WeightedTitle$weight)
+axis(side=2, at=seq(round(min(yrange),3), round( max(yrange),3)+0.01,by=round((max(yrange)-min(yrange))/7,3)))
+
+
+lines(WeightedTitle$weight, WeightedTitle$p10, type="p", lwd=lW, pch=pchs[1], col=cols[1])
+lines(WeightedBody$weight, WeightedBody$p10, type="p", lwd=lW, pch=pchs[4], col=cols[4])
+
+lines(c(0,1,3,5), TitleOnly, type="l", lwd=lW, lty=ltys[5], col=cols[5])
+lines(c(0,1,3,5), BodyOnly, type="l", lwd=lW, lty=ltys[8], col=cols[8])
+
+lines(c(0,1,3,5), best, type="l", lwd=lW, lty=ltys[9], col=cols[9])
+
+mtext(side=1, "Weight", line=2)
+mtext(side=2, "P @ 10", line=2)
+
+legend("bottom", c('Weighted Title','Weighted Body','Title Only','Body Only','Best Combination'), lty=c(NA,NA,5,5,4), pch=c(pchs[1],pchs[4],NA,NA,NA), ncol=3, text.width= 1, inset= c(0,-0.27), xpd=TRUE, col=c(cols[1],cols[4],cols[5],cols[8],cols[9]), bty='n', lwd=lW, cex=0.80, seg.len=4, y.intersp=0.8)
+
+dev.copy(pdf,paste(outputPath, "averageP10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+## Analyze nDCG@10, MAP, BPREF performance for all collection and all weighting scheme
+***** Load Data
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_Web2013-2014.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_hard2005.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2015.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2016.csv", header=TRUE, row.names=NULL, sep=",")
+***** Aggregate average data
+aggTrecDetail <- aggregate(trecDetail[,6:10], by=list(trecDetail$title,trecDetail$meta,trecDetail$headers,trecDetail$body), FUN=mean,na.rm=TRUE)
+
+colnames(aggTrecDetail) <- c("title","meta","headers","body","map","p10","ndcg10","ndcg1000","bpref")
+
+***** print aggregated results
+aggTrecDetail[aggTrecDetail$title==1 & aggTrecDetail$meta==0 &
+              aggTrecDetail$headers==0 & aggTrecDetail$body==0,
+              c(1,2,3,4,7,5,9)]
+              
+aggTrecDetail[aggTrecDetail$title==0 & aggTrecDetail$meta==0 &
+              aggTrecDetail$headers==0 & aggTrecDetail$body==1, 
+              c(1,2,3,4, 7,5,9)]
+
+aggTrecDetail[aggTrecDetail$title==1 & aggTrecDetail$meta==0 &
+              aggTrecDetail$headers==0 & aggTrecDetail$body==1, 
+              c(1,2,3,4, 7,5,9)]
+              
+aggTrecDetail[aggTrecDetail$title==3 & aggTrecDetail$meta==0 &
+              aggTrecDetail$headers==0 & aggTrecDetail$body==1, 
+              c(1,2,3,4, 7,5,9)]
+              
+aggTrecDetail[aggTrecDetail$title==1 & aggTrecDetail$meta==0 &
+              aggTrecDetail$headers==0 & aggTrecDetail$body==3, 
+              c(1,2,3,4, 7,5,9)]
+              
+
+# T-Test title only, body only, title=body, boost title and boost body Performance comparison
+***** prepare data
+titleOnly=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==0,]
+bodyOnly=trecDetail[trecDetail$title==0 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+titleBody=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+boostTitle=trecDetail[trecDetail$title==3 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+boostBody=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==3,]
+
+****** Two tailed T-TEST: Title Only (a) vs others
+col=10  #8:ndcg10, 6:map, 10:bpref
+t.test(titleOnly[,col],bodyOnly[,col],paired=TRUE,two.sided=TRUE)$p.value
+t.test(titleOnly[,col],titleBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(titleOnly[,col],boostTitle[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(titleOnly[,col],boostBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+
+****** Two tailed T-TEST: Body Only (b) vs others
+col=10  #8:ndcg10, 6:map, 10:bpref
+t.test(bodyOnly[,col],titleOnly[,col],paired=TRUE,two.sided=TRUE)$p.value
+t.test(bodyOnly[,col],titleBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(bodyOnly[,col],boostTitle[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(bodyOnly[,col],boostBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+
+****** Two tailed T-TEST: Title=Body (c) vs others
+col=10  #8:ndcg10, 6:map, 10:bpref
+t.test(titleBody[,col],titleOnly[,col],paired=TRUE,two.sided=TRUE)$p.value
+t.test(titleBody[,col],bodyOnly[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(titleBody[,col],boostTitle[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(titleBody[,col],boostBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+
+****** Two tailed T-TEST: Boost title (d) vs others
+col=10  #8:ndcg10, 6:map, 10:bpref
+t.test(boostTitle[,col],titleOnly[,col],paired=TRUE,two.sided=TRUE)$p.value
+t.test(boostTitle[,col],bodyOnly[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(boostTitle[,col],titleBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(boostTitle[,col],boostBody[,col],paired=TRUE,two.sided=TRUE)$p.value
+
+****** Two tailed T-TEST: Boost body (e) vs others
+col=10  #8:ndcg10, 6:map, 10:bpref
+t.test(boostBody[,col],titleOnly[,col],paired=TRUE,two.sided=TRUE)$p.value
+t.test(boostBody[,col],bodyOnly[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(boostBody[,col],titleBody[,col],paired=TRUE,two.sided=TRUE)$p.value 
+t.test(boostBody[,col],boostTitle[,col],paired=TRUE,two.sided=TRUE)$p.value 
+
+
+
+## Count how many times body only, title only, and title=body scheme perform best ndcg@10
+***** Load Data
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_Web2013-2014.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_hard2005.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2015.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2016.csv", header=TRUE, row.names=NULL, sep=",")
+
+***** prepare data
+titleOnly=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==0,]
+bodyOnly=trecDetail[trecDetail$title==0 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+titleBody=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+              
+***** compare the best ndcg@10            
+titleVsBody <- ifelse((titleOnly$ndcg10 == 0 & bodyOnly$ndcg10 == 0 &   titleBody$ndcg10==0),0,
+ifelse((titleOnly$ndcg10 >= bodyOnly$ndcg10 & titleOnly$ndcg10 >=titleBody$ndcg10), 1, 
+ifelse((bodyOnly$ndcg10 >= titleOnly$ndcg10 & bodyOnly$ndcg10 >=titleBody$ndcg10), 2, 3)))
+
+****** get count of each scheme
+stat <- table(titleVsBody)
+
+# General Chart Setup
+```
+lW = 1.5
+w = 8
+h = 3
+margin=c(3,1,1,1)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+
+xrange <- range(seq(1,length(titleVsBody),1))
+yrange <- range(c(0,1,2,3))
+
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+box(lty=1, col='black')
+axis(side=1, at=seq(ceiling(length(titleVsBody)/10),length(titleVsBody), ceiling(length(titleVsBody)/10)))
+
+lines(seq(1,length(titleVsBody), 1),titleVsBody, type="p", lwd=lW, lty=1, col="blue", pch=20)
+
+mtext(side=1, "Query", line=2)
+```
+
+**** add labels
+text(x=length(titleVsBody)/2,y=2.8, paste("Title = Body is best, Freq. ", stat[4], "(",round(stat[4]*100/length(titleVsBody),0), "%)"))
+
+text(x=length(titleVsBody)/2,y=1.8, paste("Body only is best, Freq. ", stat[3], "(",round(stat[3]*100/length(titleVsBody),0), "%)"))
+
+text(x=length(titleVsBody)/2,y=0.8, paste("Title only is best, Freq. ", stat[2], "(",round(stat[2]*100/length(titleVsBody),0), "%)"))
+
+text(x=length(titleVsBody)/2,y=0.2, paste("All nDCG@10 = 0, Freq. ", stat[1], "(",round(stat[1]*100/length(titleVsBody),0), "%)"))
+
+# Save comparison of times  body only, title only, and title=body scheme perform best ndcg@10
+
+***** Web2013-2014
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+***** Hard2005
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+***** CLEF2015
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_clef2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+***** CLEF2016
+dev.copy(pdf,paste(outputPath, "DetailBodyTitleNDCG10_clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+
+
+
+
+## Analysis of P10 Detail per query 
+# Load Data
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_Web2013-2014.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_hard2005.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2015.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2016.csv", header=TRUE, row.names=NULL, sep=",")
+
+# prepare data
+titleOnly=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==0,]
+bodyOnly=trecDetail[trecDetail$title==0 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+titleBody=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+titleBoost=trecDetail[trecDetail$title==3 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+bodyBoost=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==3,]
+
+# get list of query ids
+queries=unique(trecDetail$QueryNumber)
+
+# General Chart Setup
+```
+lW = 1.5
+w = 8
+h = 4
+margin=c(5,3,1,1)
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title")
+cols <- c("blue", "orange", "gray40", "blue","orange")
+ltys <- c(0,0,0,0,0)
+pchs <- c(2,5,3,6,0)
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/"
+```
+***** Plot P10 Detail per query
+```
+xrange <- range(c(factor(queries)))
+yrange <- range(c(0,1))
+
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+box(lty=1, col='black')
+axis(side=1, at=factor(queries))
+axis(side=2, at=seq(0, 1,by=0.2))
+
+lines(factor(queries), titleOnly$p10, type="o", lwd=lW, pch=pchs[1], lty=ltys[1], col=cols[1])
+lines(factor(queries), bodyOnly$p10, type="o", lwd=lW, pch=pchs[2], lty=ltys[2], col=cols[2])
+lines(factor(queries), titleBody$p10, type="o", lwd=lW, pch=pchs[3], lty=ltys[3], col=cols[3])
+lines(factor(queries), titleBoost$p10, type="o", lwd=lW, pch=pchs[4],lty=ltys[4], col=cols[4])
+lines(factor(queries), bodyBoost$p10, type="o", lwd=lW, pch=pchs[5], lty=ltys[5], col=cols[5])
+
+mtext(side=1, "Query", line=2)
+mtext(side=2, "P @ 10", line=2)
+```
+
+***** Save Detail Query by Query P10 for Web2013_2014
+```
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 12, inset= c(0,-0.30), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailP10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Detail Query by Query P10 for HARD2005
+```
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 8, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailP10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Detail Query by Query P10 for CLEF2015
+```
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 10, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailP10_CLEF2015.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+***** Save Detail Query by Query P10 for CLEF2016
+```
+legend("bottom", lbls, lty=ltys, ncol=5, text.width= 40, inset= c(0,-0.3), xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=0.80, seg.len=1, x.intersp=0.1)
+dev.copy(pdf,paste(outputPath, "detailP10_CLEF2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+##Analysis of Uniform VS Adaptive
+For future work, an interesting direction is to create an adaptive system that able to detect the best weigthing scheme for a given query. To measure the advantage of such oracle system we compare the best P@10 score from a single (uniform) weighting scheme (i.e, title only, body only, title = body, title boosting, body boosting) against P@10 score from adaptive systems which find the best scheme for each individual query.
+
+# Load Data
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_Web2013-2014.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_hard2005.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2015.csv", header=TRUE, row.names=NULL, sep=",")
+
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_clef2016.csv", header=TRUE, row.names=NULL, sep=",")
+
+# Get best P@10 of uniform weighting scheme by aggregate mean the data by scheme
+aggByScheme <- aggregate(trecDetail[,6:10], by=list(trecDetail$title,trecDetail$meta,trecDetail$headers,trecDetail$body), FUN=mean,na.rm=TRUE)
+
+colnames(aggByScheme) <- c("title","meta","headers","body","map","p10","ndcg10","ndcg1000","bpref")
+
+# get the best from uniform scheme
+bestUniform = max(aggByScheme$p10, na.rm=TRUE)
+
+
+# Get best P@10 of adaptive weighting scheme by aggregate Max the data by query
+aggByQuery <- aggregate(trecDetail[,6:10], by=list(trecDetail$QueryNumber), FUN=max,na.rm=TRUE)
+
+# get the mean P@10 of the weighting scheme
+bestAdaptive = mean(aggByQuery$p10)
+
+# get improvement
+improvement = (bestAdaptive/bestUniform)*bestUniform*100
+
+print(paste("uniform: ", bestUniform))
+print(paste("adaptive: ", bestAdaptive))
+print(paste("improvement: ", improvement))
+
+
+## Test the best results from the uniform and the adaptive
+# get results from the best scheme in uniform
+
+**** WEB2013-2014 best scheme: 3 0 0 5
+uniformResults=trecDetail[trecDetail$title==3 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==5,]
+
+**** Hard2005 best scheme: 1 0 0 1       
+uniformResults=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+              
+**** Clef2015 best scheme: 1 1 0 3       
+uniformResults=trecDetail[trecDetail$title==1 & trecDetail$meta==1 &
+              trecDetail$headers==0 & trecDetail$body==3,]
+
+**** Clef2016 best scheme: 3 0 0 5       
+uniformResults=trecDetail[trecDetail$title==3 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==5,]
+              
+**** cross check, the mean of uniformResults should = bestUniform
+mean(uniformResults$p10)
+
+# Two tailed T-Test the best uniform and adaptive
+t.test(uniformResults$p10,aggByQuery$p10,paired=TRUE,two.sided=TRUE)$p.value
+
+
+
+## Reciprocal rank comparison Navigational and Other queries in WEB2013-2014
+# Load Data
+trecDetail <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/R/trecDetailResult_Web2013-2014.csv", header=TRUE, row.names=NULL, sep=",")
+
+
+# prepare data
+titleOnly=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==0,]
+bodyOnly=trecDetail[trecDetail$title==0 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+titleBody=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+titleBoost=trecDetail[trecDetail$title==3 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==1,]
+bodyBoost=trecDetail[trecDetail$title==1 & trecDetail$meta==0 &
+              trecDetail$headers==0 & trecDetail$body==3,]
+
+# separate the navigational and the non navigational queries
+navQueries <- c(202,223,'227','257','265','266','269','273','285','298')
+
+# get the Navigational queries results
+titleOnly <- titleOnly[(titleOnly$QueryNumber %in% navQueries), ]
+bodyOnly <- bodyOnly[(bodyOnly$QueryNumber %in% navQueries), ]
+titleBody <- titleBody[(titleBody$QueryNumber %in% navQueries), ]
+titleBoost <- titleBoost[(titleBoost$QueryNumber %in% navQueries), ]
+bodyBoost <- bodyBoost[(bodyBoost$QueryNumber %in% navQueries), ]
+
+# get the NON-Navigational queries results
+titleOnly <- titleOnly[!(titleOnly$QueryNumber %in% navQueries), ]
+bodyOnly <- bodyOnly[!(bodyOnly$QueryNumber %in% navQueries), ]
+titleBody <- titleBody[!(titleBody$QueryNumber %in% navQueries), ]
+titleBoost <- titleBoost[!(titleBoost$QueryNumber %in% navQueries), ]
+bodyBoost <- bodyBoost[!(bodyBoost$QueryNumber %in% navQueries), ]
+
+
+# display the results
+mean(titleOnly$rr)
+mean(bodyOnly$rr)
+mean(titleBody$rr)
+mean(titleBoost$rr)
+mean(bodyBoost$rr)
+
+
+
+
+
+

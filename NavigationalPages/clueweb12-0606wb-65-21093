@@ -1,0 +1,367 @@
+<!-- Original URL: http://www.whfoods.com/genpage.php?tname=nutrient&dbid=75 -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf8" >
+<meta name="description" content="Non-profit foundation providing reliable, scientifically accurate, personalized information for convenient and enjoyable healthy eating.">
+<meta name="keywords" content="allergy,arthritis,asthma,atherosclerosis,beans,blood,irritable bowel,breakfast,breast cancer,cancer,children,chronic,colon cancer,cooking,cuisine,culinary,diabetes,diet,dietary,digestion,dinner recipe,disease,ear,eating,fat,fatigue,federal,fish,food,fruit,headache,health,healthy,herbs,hypertension,infection,irritable,lunch,macrobiotic,meal,media,menopause,menu,migraine,natural,nutrition,nutritionist,organic,osteoarthritis,osteoporosis,otitis,pregnancy,prevention,prostate,recipe,rheumatoid,snack,spice,syndrome,teenage,vegetables,vegetarian,weight,weight-loss,Atkins,Ayurveda,Buck Levin,D'Adamo,Kerry Evans,Stephanie Gailing,George Mateljan,Joseph Pizzorno,Lara Pizzorno,Suzanne Munson,Ornish,">
+<title>WHFoods: magnesium</title><link type="text/css" rel="stylesheet" href="http://www.whfoods.com/styles/whfnew2.css">
+<script type="text/javascript">
+<!--
+function IsEmailValid(FormName,ElemName)
+{
+var EmailOk  = true
+var Temp     = document.forms[FormName].elements[ElemName]
+var AtSym    = Temp.value.indexOf('@')
+var Period   = Temp.value.lastIndexOf('.')
+var Space    = Temp.value.indexOf(' ')
+var Length   = Temp.value.length - 1   // Array is from 0 to length-1
+var bcr      = new RegExp("[^a-zA-Z0-9-.@,_]");
+var BadChars = Temp.value.match(bcr);
+
+if ((BadChars!=null)    || // any bad chars
+    (AtSym < 1)         || // '@' cannot be in first position
+    (Period <= AtSym+1) || // Must be atleast one valid char btwn '@' and '.'
+    (Period == Length ) || // Must be atleast one valid char after '.'
+    (Space  != -1))        // No empty spaces permitted
+   {  
+      EmailOk = false
+      alert('Please enter a valid e-mail address!')
+      Temp.focus()
+   }
+return EmailOk
+}
+
+function doClick(tname) {
+  prepwin=window.open(tname,"prepwin","height=350,width=500,scrollbars",true);
+  prepwin.focus();
+}
+
+function toggleDiv(dname) {
+  an=eval("document.all.ar"+dname);
+  dn=eval("document.all."+dname);
+  t=dn.style.display;
+  an.src=t.match('none')?'ardn.gif':'arrt.gif';
+  dn.style.display=t.match('none')?'inline':'none';
+}
+-->
+</script>
+</head>
+<body>
+<div id="mainpage">
+  <div id="leftsidebar">
+    <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-20-20597&c=false><img src="http://www.whfoods.com/images/featureavocado.gif" alt="food of the week" width="202" height="206" /></a>
+    <div id="leftlayout"><div style="color:red; font-size:30px; font-weight:bold; line-height:28px; margin-bottom:8px">
+FREE Weekly Newsletter
+</div>
+To stay informed and get healthier and more powerful
+<br /><br />
+Sign Up Now and get the first chapter of <i>The World's Healthiest Foods</i> book <span style="font-size:13px; font-weight:bold">FREE</span>.
+<form method="post" action="http://www.aweber.com/scripts/addlead.pl">
+<input type="hidden" name="meta_web_form_id" value="1391077952" />
+<input type="hidden" name="meta_split_id" value="" />
+<input type="hidden" name="unit" value="whf-bulletin" />
+<input type="hidden" name="redirect" value="http://www.aweber.com/form/thankyou_vo.html" />
+<input type="hidden" name="meta_redirect_onlist" value="" />
+<input type="hidden" name="meta_adtracking" value="" />
+<input type="hidden" name="meta_message" value="1" />
+<input type="hidden" name="meta_required" value="from" />
+<input type="hidden" name="meta_forward_vars" value="0" />
+Your Email
+<input type="text" name="from" /><input type="submit" value="submit" name="submit" />
+</form>
+<p /><b><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33835&c=false>
+With your purchase of our book, you'll receive online access to free gifts (valued at $24.95) to improve your health.
+</a></b>
+<div style="text-align:center;">
+<a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33835&c=false><img src="http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/getresource.cgi?id=BD0D747D5C7D3C61EB219F939F8BE66283F730F7" alt="New Book"></a>
+</div>
+<p />Are you on Twitter? If so, follow our Healthiest Way of Eating tweets at <a href=http://twitter.com/WHFoods>@WHFoods</a>
+
+<div class="SUBTITLE-LSB">Eating Healthy</div>
+<ul class="sidebarlist">
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0300tw-28-09368&c=false>WHFoods List</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33832&c=false>Important Q&amp;As</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-47-33606&c=false>Essential Nutrients</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-64-23200&c=false>Food Advisor</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0608wb-20-16978&c=false>About Organic Foods</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-93-00137&c=false>Ask George Your Questions</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33842&c=false>Where's George</a></li>
+</ul>
+
+<div class="SUBTITLE-LSB">Cooking Healthy</div>
+<ul class="sidebarlist">
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-83-21690&c=false>WHFoods Kitchen</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-75-03123&c=false>Seasonal Eating</a></li>
+<li><a href=http://www.whfoods.com/recipestoc.php#recipes>Over 100 Recipes</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33829&c=false>In-Home Cooking Class</a></li>
+</ul>
+
+<div class="SUBTITLE-LSB">Feeling Great</div>
+<ul class="sidebarlist">
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0608wb-01-17355&c=false>Healthy Way of Eating</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33839&c=false>How Foods Help You Stay Healthy</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-93-00139&c=false>For the Entire Family</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33830&c=false>5 Health-Promoting Diets</a></li>
+</ul>
+
+<div class="SUBTITLE-LSB">Community</div>
+<ul class="sidebarlist">
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-64-23208&c=false>Who We Are</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33841&c=false>What's New</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33834&c=false>Getting Started</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-83-21689&c=false>Contact Us</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33838&c=false>Send to a Friend</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33840&c=false>Rating Questionnaire</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-93-00132&c=false>Free Weekly Bulletin</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-93-00133&c=false>Make a Tax Deductible Donation</a></li>
+<li><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33835&c=false>New Book</a></li>
+</ul>
+<p class="SUBTEXT-WHF"><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33836&c=false>Privacy Policy and Visitor Agreement</a></p>
+<p class="SUBTEXT-WHF">For education only, consult a healthcare practitioner for any health problems.</p>
+<br />    </div>
+  </div>
+
+  <div id="rightside">
+    <div id="rightheader">
+      <div class="headlinks">
+	<a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0000tw-44-13880&c=false>home</a> -
+	<a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-64-23208&c=false>who we are</a> -
+	<a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33841&c=false>what's new</a> -
+	<a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33834&c=false>getting started</a> -
+	<a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33828&c=false>community</a> - 
+	<a href=http://www.whfoods.com/rss/rss.xml><img src="http://www.whfoods.com/images/rss.gif" alt="RSS Feed"></a>
+      </div>
+      <br>
+      <div style="background:url(/images/whf_banner_3.jpg) center no-repeat; height:120px;">
+      <form style="position:relative; top:84px; left:30px; margin:0; padding:0; font-weight:bold; font-size:10px;" name="search" action="/sitesearch.php" method="post">
+      <input type="text" size="12" name="sstr">
+      <button type=submit style="padding:0; margin:0; font-size:10px; font-weight:bold;">Search</button>
+      <input type="hidden" name="how" value="1">
+      </form>
+      </div>
+      <div class="TAGLINE-WHF">
+The George Mateljan Foundation, a not-for-profit foundation with no commercial interests or advertising, is a new force for change to help make a healthier you and a healthier world.
+      </div>
+      <br />
+      <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33831&c=false><img src="http://www.whfoods.com/images/gnewnavbar1.gif" alt="eating healthy" /></a><a href=http://www.whfoods.com/cookhealthy.php><img src="http://www.whfoods.com/images/gnewnavbar2.gif" alt="cooking healthy" /></a><a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33833&c=false><img src="http://www.whfoods.com/images/gnewnavbar3.gif" alt="feeling great" /></a>
+    </div>
+  </div>
+  <div id="subcontent"><div CLASS="SENDTAG-WHF"><a href=http://www.whfoods.com/genpage.php?pfriendly=1&tname=nutrient&dbid=75>Printer friendly version</a></div>
+
+<div class="addthis_toolbox addthis_default_style ">
+<a class="addthis_button_facebook"></a>
+<a class="addthis_button_twitter"></a>
+<a class="addthis_button_google"></a>
+<a class="addthis_button_compact"></a>
+<a class="addthis_counter addthis_bubble_style"></a>
+<a class="addthis_button_facebook_like"></a>
+</div>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis%5Fwidget.js%23pubid%3Dxa%2D4dffb7dd7f2f04be"></script>
+
+<p CLASS="TITLE-WHF">magnesium</p>
+<h4>What can high-magnesium foods do for you?</h4>
+<ul><li>Relax your nerves and muscles
+<li>Build and strengthen bones
+<li>Keep your blood circulating smoothly
+</ul>
+<p class="SUBTITLE2-WHF">What events can indicate a need for more high-magnesium foods?</p>
+<ul><li>Muscle weakness, tremor, or spasm
+<li>Heart arrhythmia, irregular contraction, or increased heart rate
+<li>Softening and weakening of bone
+<li>Imbalanced blood sugar levels
+<li>Headaches
+<li>Elevated blood pressure
+</ul>
+<p>Excellent sources of magnesium include <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-65-21086&c=false>Swiss chard</a> and <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-65-21088&c=false>spinach</a>. Avoid overcooking to minimize loss of magnesium.
+
+<p></p><div style="padding:1%; width:100%; border:solid black 2px">
+<div style="text-align:center; font-weight:bold; background-color:orange;">World's Healthiest Foods rich in<br/>magnesium</div>
+<div style="padding-top:10px; font-size:12px; font-weight:bold;"><span style="float:left; width:29%; text-align:center;">Food</span><span style="float:left; width:10%; text-align:center">Cals</span><span style="float:left; width:60%; text-align:center;">%Daily Value</span></div><br clear=all>
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Pumpkin Seeds</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">180</span><span style="float:left; background-color:ffcc66; width:57%; text-align:left;">47.7%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Spinach</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">41</span><span style="float:left; background-color:ffcc66; width:46%; text-align:left;">39.1%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Swiss Chard</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">35</span><span style="float:left; background-color:ffcc66; width:45%; text-align:left;">37.6%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Soybeans</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">298</span><span style="float:left; background-color:ffcc66; width:44%; text-align:left;">36.9%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Sesame Seeds</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">206</span><span style="float:left; background-color:ffcc66; width:37%; text-align:left;">31.5%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Halibut</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">159</span><span style="float:left; background-color:ffcc66; width:36%; text-align:left;">30.3%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Black Beans</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">227</span><span style="float:left; background-color:ffcc66; width:36%; text-align:left;">30.1%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Sunflower seeds</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">204</span><span style="float:left; background-color:ffcc66; width:34%; text-align:left;">28.4%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Cashews</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">189</span><span style="float:left; background-color:ffcc66; width:30%; text-align:left;">25%</span></div><br clear=all />
+<div style="font-size:12px;"><span style="float:left; background-color:d3e283; width:29%;">Almonds</span><span style="float:left; background-color:dddd00;color:red; width:10%; text-align:center">206</span><span style="float:left; background-color:ffcc66; width:29%; text-align:left;">24.6%</span></div><br clear=all />
+</div>
+<p>
+<a href=http://www.whfoods.com/#foodchart>For serving size for specific foods, see Nutrient Rating Chart below at the bottom of this page</a>.
+<p>
+<table border=0>
+<tr><td valign=top>
+<ul>
+<li><a href=http://www.whfoods.com/#nutrientdescr>Description</a>
+<li><a href=http://www.whfoods.com/#function>Function</a>
+<li><a href=http://www.whfoods.com/#deficiencysymptoms>Deficiency Symptoms</a>
+<li><a href=http://www.whfoods.com/#toxicitysymptoms>Toxicity Symptoms</a>
+<li><a href=http://www.whfoods.com/#impactcookingstorageprocessing>Cooking, storage and processing</a>
+<li><a href=http://www.whfoods.com/#factorswhichaffect>Factors that affect function</a>
+</ul></td><td valign=top><ul>
+<li><a href=http://www.whfoods.com/#nutrientinteractions>Nutrient interaction</a>
+<li><a href=http://www.whfoods.com/#healthconditions>Health conditions</a>
+<li><a href=http://www.whfoods.com/#foodsources>Food Sources</a>
+<li><a href=http://www.whfoods.com/#pubrecs>Public Health Recommendations</a>
+<li><a href=http://www.whfoods.com/#references>References</a>
+</ul></td></tr></table>
+<p class="SUBTITLE-WHF"><a name="nutrientdescr">Description</a></p>
+<p class="SUBTITLE2-WHF">What is magnesium?</p>
+<p>Magnesium is usually referred to as a "macromineral," which means that our food must provide us with hundreds of milligrams of magnesium every day. (The other macrominerals that all humans must get from food are <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-20-20604&c=false>calcium</a>, phosphorus, sodium:nutrient, <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0607wb-26-22184&c=false>potassium</a>, and chloride).
+<p>Inside our bodies, magnesium is found mostly in our bones (60-65%), but also in our muscles (25%), and in other cell types and body fluids.   Like all minerals, magnesium cannot be made in our body and must therefore be plentiful in our diet in order for us to remain healthy.
+<p>Magnesium is sometimes regarded as a "smoothie" mineral, since it has the ability to relax our muscles. Our nerves also depend upon magnesium to avoid becoming overexcited, and this aspect of magnesium links this mineral to maintenance of healthy blood pressure.
+
+<p class="SUBTITLE-WHF"><a name="function">How it Functions</a></p>
+<p class="SUBTITLE2-WHF">What is the function of magnesium?</p>
+<p class="SUBTITLE2-WHF">Bone Formation</p>
+<p>About two thirds of all magnesium in our body is found in our bones. Researchers have discovered, however, that bone magnesium has two very different roles to play in our health. Some of the magnesium in our bones helps give them their physical structure. This magnesium is part of the bone's crystal lattice and is found in this "bone scaffolding" together with the minerals phosphorus and calcium.
+<p>Other amounts of magnesium, however, are found on the surface of the bone. This surface magnesium does not appear to be involved in the bone's structure, but instead acts as a storage site for magnesium which the body can draw upon in times of poor dietary supply.
+<p class="SUBTITLE2-WHF">Nerve and Muscle Relaxation</p>
+<p>Magnesium and its fellow macronutrient, <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-20-20604&c=false>calcium</a>, act together to help regulate the body's nerve and muscle tone. In many nerve cells, magnesium serves as a chemical gate blocker - as long as there is enough magnesium around, calcium can't rush into the nerve cell and activate the nerve.  This gate blocking by magnesium helps keep the nerve relaxed. If our diet provides us with too little magnesium, this gate blocking can fail and the nerve cell can become overactivated. When some nerve cells are overactivated, they can send too many messages to the muscles and cause the muscles to overcontract. This chain of events helps explain how magnesium deficiency can trigger muscle tension, muscle soreness, muscle spasms, muscle cramps, and muscle fatigue.
+<p class="SUBTITLE2-WHF">Other functions of magnesium</p>
+<p>Many chemical reactions in the body involve the presence of an enzyme. Enzymes are special proteins that help trigger chemical reactions. Over 300 different enzymes in the body require magnesium in order to function. For this reason, the functions of this mineral are especially diverse. Magnesium is involved in the metabolism of proteins, carbohydrates, and fats. It helps genes function properly. Some fuels cannot be stored in our muscle cells unless adequate supplies of magnesium are available.
+<p>The metabolic role of magnesium is so diverse that it is difficult to find a body system that is not affected by magnesium deficiency. Our cardiovascular system, digestive system, nervous system, muscles, kidneys, liver, hormone-secreting glands, and brain all rely on magnesium for their metabolic function.
+
+<p class="SUBTITLE-WHF"><a name="deficiencysymptoms">Deficiency Symptoms</a></p>
+<p class="SUBTITLE2-WHF">What are deficiency symptoms for magnesium?</p>
+<p>Because magnesium plays such a wide variety of roles in the body, the symptoms of magnesium deficiency can also vary widely. Many symptoms involve changes in nerve and muscle function. These changes include muscle weakness, tremor, and spasm. In the heart muscle, magnesium deficiency can result in arrhythmia, irregular contraction, and increased heart rate.
+<p>Because of its role in bone structure, the softening and weakening of bone can also be a symptom of magnesium deficiency. Other symptoms can include: imbalanced blood sugar levels; headaches; elevated blood pressure; elevated fats in the bloodstream; depression; seizures; nausea; vomiting; and lack of appetite.
+
+<p class="SUBTITLE-WHF"><a name="toxicitysymptoms">Toxicity Symptoms</a></p>
+<p class="SUBTITLE2-WHF">What are toxicity symptoms for magnesium?</p>
+<p>The most common toxicity symptom associated with high levels of magnesium intake is diarrhea. This symptom is most commonly seen in situations where magnesium is taken as a dietary supplement. In research studies, the doses of magnesium associated with diarrhea usually range from 1-5 grams (1,000-5,000 milligrams), but diarrhea can occur at lower supplemental doses. Magnesium toxicity can also be associated with very generalized symptoms like increased drowsiness or sense of weakness.
+<p>In 1997, the National Academy of Sciences set a tolerable upper limit (UL) on intake of magnesium at 350 milligrams per day for individuals 9 years and older. This limit was restricted, however, to magnesium obtained from dietary supplements, and no upper limit was set on intake of magnesium from food sources.
+
+<p class="SUBTITLE-WHF"><a name="impactcookingstorageprocessing">Impact of Cooking, Storage and Processing</a></p>
+<p class="SUBTITLE2-WHF">How do cooking, storage, or processing affect magnesium?</p>
+<p>The impact of cooking and processing on magnesium can vary greatly from food to food, since magnesium is found in different forms in different types of food. In some foods, where a greater percent of magnesium is found in water-soluble form, blanching (boiling or steaming for 1-4 minutes), steaming, or boiling of these foods can result in a substantial loss of magnesium. For example, about one third of the magnesium in <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-65-21088&c=false>spinach</a> is lost after blanching.  Similarly, when <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-83-17265&c=false>navy beans</a> are cooked, they lose 65% of their magnesium.
+<p>In other foods that are rich in magnesium, like <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0200tw-55-13266&c=false>almonds</a> or <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-20-20592&c=false>peanuts</a>, there is very little loss of magnesium either from roasting or from processing into almond or peanut butter (as long as the whole almond or peanut is used).
+
+<p class="SUBTITLE-WHF"><a name="factorswhichaffect">Factors that Affect Function</a></p>
+<p class="SUBTITLE2-WHF">What factors might contribute to a deficiency of magnesium?</p>
+<p>In addition to poor dietary intake, problems in the digestive tract are the most common cause of magnesium deficiency. These digestive tract problems include malabsorption, diarrhea, and ulcerative colitis. Many kinds of physical stresses can contribute to magnesium deficiency, including cold stress, physical trauma, and surgery. Kidney disease and alcoholism can also contribute to a deficiency of this mineral.
+
+<p class="SUBTITLE-WHF"><a name="nutrientinteractions">Nutrient Interactions</a></p>
+<p class="SUBTITLE2-WHF">How do other nutrients interact with magnesium?</p>
+<p>The relationship between magnesium and calcium is one of the most actively researched, and yet not fully understood mineral-to-mineral relationships. On one hand, magnesium is required in order for calcium to maintain a balanced role in the body's metabolism.  On the other hand, magnesium can compete with calcium and prevent calcium from trigger certain events, like the relay of a nerve message or the contraction of a muscle.
+<p>Because of the complex relationship between <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-20-20604&c=false>calcium</a> and magnesium, healthy diets almost always need to contain foods rich in both minerals. Magnesium also has an important relationship with <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0607wb-26-22184&c=false>potassium</a>, and helps regulate the movement of potassium in and out of our cells.  Finally, because magnesium can be attached to certain building blocks of protein (called amino acids), increased intake of protein can sometimes help improve the body's magnesium status.
+
+<p class="SUBTITLE-WHF"><a name="healthconditions">Health Conditions</a></p>
+<p class="SUBTITLE2-WHF">What health conditions require special emphasis on magnesium?</p>
+<p class="SUBTITLE2-WHF">Magnesium may play a role in the prevention and/or treatment of the following health conditions:</p>
+<ul>
+<li>Alcoholism
+<li>Angina pectoris
+<li>Arrhythmia
+<li>Asthma
+<li>Autism
+<li>Chronic fatigue
+<li>Congenital heart disease
+<li>Congestive heart failure
+<li>Coronary artery disease
+<li>Diabetes
+<li>Eclampsia
+<li>Epilepsy
+<li>Glaucoma
+<li>Heart attack
+<li>HIV/AIDS
+<li>Hypertension
+<li>Hypertriglyceridemia
+<li>Inflammatory bowel disease
+<li>Migraine
+<li>Multiple sclerosis
+<li>Osteoporosis
+<li>Peptic ulcers
+<li>PMS
+<li>Pre-eclampsia
+<li>Raynaud's syndrome
+<li>Systemic lupus erythematosus
+</ul>
+
+<p class="SUBTITLE-WHF"><a name="foodsources">Food Sources</a></p>
+<p class="SUBTITLE2-WHF">What foods provide magnesium?</p>
+<p>Excellent sources of magnesium include Swiss chard and <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-65-21088&c=false>spinach</a>.
+<p>Very good sources of magnesium include <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0607wb-02-07460&c=false>mustard greens</a>, blackstrap molasses, halibut, turnip greens, pumpkin seeds, sea vegetables, green beans and collard greens.
+<p>There are numerous good sources of magnesium including cucumber, bell peppers, celery, kale, cantaloupe and a variety of seeds, including <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0607wb-28-08523&c=false>sunflower seeds</a>, <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-83-17264&c=false>sesame seeds</a>, and <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0606wb-30-11094&c=false>flaxseeds</a>.
+
+<p><a name="foodchart">&nbsp;</a></p><h4>Introduction to Nutrient Rating System Chart</h4>
+In order to better help you identify foods that feature a high concentration of nutrients for the calories they contain, we created a Food Rating System. This system allows us to highlight the foods that are especially rich in particular nutrients. The following chart shows the World's Healthiest Foods that are either an excellent, very good, or good source of magnesium. Next to each food name, you'll find the serving size we used to calculate the food's nutrient composition, the calories contained in the serving, the amount of magnesium contained in one serving size of the food, the percent Daily Value (DV%) that this amount represents, the nutrient density that we calculated for this food and nutrient, and the rating we established in our rating system. For most of our nutrient ratings, we adopted the government standards for food labeling that are found in the U.S. Food and Drug Administration's "Reference Values for Nutrition Labeling." <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0607wb-73-08161&c=false>Read more background information and details of our rating system</a>.<div style="width:100%;">
+<table style="width:100%; background-color:FFF1BD; border:solid black 2px; border-collapse:collapse;">
+<tr style="background-color:FADC82;"><th style="border:solid black 1px;" colspan="7">World's Healthiest Foods ranked as quality sources of<br>magnesium</th></tr>
+<tr style="background-color:FFE998" valign="bottom"><th style="border:solid black 1px">Food</th><th style="border:solid black 1px">Serving<br>Size</th><th style="border:solid black 1px">Cals</th><th style="border:solid black 1px">Amount<br>(mg)</th><th style="border:solid black 1px">DV<br>(%)</th><th style="border:solid black 1px">Nutrient<br>Density</th><th style="border:solid black 1px">World's<br>Healthiest<br>Foods Rating</th></tr>
+<tr style="background-color:ffff99"><td style="border:solid black 1px">Swiss Chard</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">35.0</td><td style="border:solid black 1px; text-align:center">150.50</td><td style="border:solid black 1px; text-align:center">37.6</td><td style="border:solid black 1px; text-align:center">19.4</td><td style="border:solid black 1px; text-align:center">excellent</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Spinach</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">41.4</td><td style="border:solid black 1px; text-align:center">156.60</td><td style="border:solid black 1px; text-align:center">39.1</td><td style="border:solid black 1px; text-align:center">17.0</td><td style="border:solid black 1px; text-align:center">excellent</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Sea Vegetables</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">8.6</td><td style="border:solid black 1px; text-align:center">24.20</td><td style="border:solid black 1px; text-align:center">6.0</td><td style="border:solid black 1px; text-align:center">12.7</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Turnip Greens</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">28.8</td><td style="border:solid black 1px; text-align:center">31.68</td><td style="border:solid black 1px; text-align:center">7.9</td><td style="border:solid black 1px; text-align:center">4.9</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Summer Squash</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">18.1</td><td style="border:solid black 1px; text-align:center">19.21</td><td style="border:solid black 1px; text-align:center">4.8</td><td style="border:solid black 1px; text-align:center">4.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Pumpkin Seeds</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">180.3</td><td style="border:solid black 1px; text-align:center">190.92</td><td style="border:solid black 1px; text-align:center">47.7</td><td style="border:solid black 1px; text-align:center">4.8</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Mustard Greens</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">21.0</td><td style="border:solid black 1px; text-align:center">21.00</td><td style="border:solid black 1px; text-align:center">5.2</td><td style="border:solid black 1px; text-align:center">4.5</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Cumin Seeds</td><td style="border:solid black 1px; text-align:center">1 tsp</td><td style="border:solid black 1px; text-align:center">15.8</td><td style="border:solid black 1px; text-align:center">15.37</td><td style="border:solid black 1px; text-align:center">3.8</td><td style="border:solid black 1px; text-align:center">4.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Blackstrap Molasses</td><td style="border:solid black 1px; text-align:center">2 tsp</td><td style="border:solid black 1px; text-align:center">32.1</td><td style="border:solid black 1px; text-align:center">29.39</td><td style="border:solid black 1px; text-align:center">7.3</td><td style="border:solid black 1px; text-align:center">4.1</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Cucumber</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">15.6</td><td style="border:solid black 1px; text-align:center">13.52</td><td style="border:solid black 1px; text-align:center">3.4</td><td style="border:solid black 1px; text-align:center">3.9</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Dill</td><td style="border:solid black 1px; text-align:center">2 tsp</td><td style="border:solid black 1px; text-align:center">12.8</td><td style="border:solid black 1px; text-align:center">10.75</td><td style="border:solid black 1px; text-align:center">2.7</td><td style="border:solid black 1px; text-align:center">3.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Romaine Lettuce</td><td style="border:solid black 1px; text-align:center">2 cups</td><td style="border:solid black 1px; text-align:center">16.0</td><td style="border:solid black 1px; text-align:center">13.16</td><td style="border:solid black 1px; text-align:center">3.3</td><td style="border:solid black 1px; text-align:center">3.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Cloves</td><td style="border:solid black 1px; text-align:center">2 tsp</td><td style="border:solid black 1px; text-align:center">13.6</td><td style="border:solid black 1px; text-align:center">11.09</td><td style="border:solid black 1px; text-align:center">2.8</td><td style="border:solid black 1px; text-align:center">3.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Green Beans</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">31.0</td><td style="border:solid black 1px; text-align:center">25.00</td><td style="border:solid black 1px; text-align:center">6.2</td><td style="border:solid black 1px; text-align:center">3.6</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Collard Greens</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">49.4</td><td style="border:solid black 1px; text-align:center">38.00</td><td style="border:solid black 1px; text-align:center">9.5</td><td style="border:solid black 1px; text-align:center">3.5</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Halibut</td><td style="border:solid black 1px; text-align:center">4 oz-wt</td><td style="border:solid black 1px; text-align:center">158.8</td><td style="border:solid black 1px; text-align:center">121.34</td><td style="border:solid black 1px; text-align:center">30.3</td><td style="border:solid black 1px; text-align:center">3.4</td><td style="border:solid black 1px; text-align:center">very good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Flax seeds</td><td style="border:solid black 1px; text-align:center">2 tbs</td><td style="border:solid black 1px; text-align:center">112.1</td><td style="border:solid black 1px; text-align:center">82.32</td><td style="border:solid black 1px; text-align:center">20.6</td><td style="border:solid black 1px; text-align:center">3.3</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Mustard Seeds</td><td style="border:solid black 1px; text-align:center">2 tsp</td><td style="border:solid black 1px; text-align:center">20.3</td><td style="border:solid black 1px; text-align:center">14.80</td><td style="border:solid black 1px; text-align:center">3.7</td><td style="border:solid black 1px; text-align:center">3.3</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Asparagus</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">26.8</td><td style="border:solid black 1px; text-align:center">18.76</td><td style="border:solid black 1px; text-align:center">4.7</td><td style="border:solid black 1px; text-align:center">3.2</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Celery</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">16.2</td><td style="border:solid black 1px; text-align:center">11.11</td><td style="border:solid black 1px; text-align:center">2.8</td><td style="border:solid black 1px; text-align:center">3.1</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Kale</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">36.4</td><td style="border:solid black 1px; text-align:center">23.40</td><td style="border:solid black 1px; text-align:center">5.8</td><td style="border:solid black 1px; text-align:center">2.9</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Broccoli</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">30.9</td><td style="border:solid black 1px; text-align:center">19.11</td><td style="border:solid black 1px; text-align:center">4.8</td><td style="border:solid black 1px; text-align:center">2.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Sesame Seeds</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">206.3</td><td style="border:solid black 1px; text-align:center">126.36</td><td style="border:solid black 1px; text-align:center">31.6</td><td style="border:solid black 1px; text-align:center">2.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Tomatoes</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">32.4</td><td style="border:solid black 1px; text-align:center">19.80</td><td style="border:solid black 1px; text-align:center">5.0</td><td style="border:solid black 1px; text-align:center">2.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Cauliflower</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">26.8</td><td style="border:solid black 1px; text-align:center">16.05</td><td style="border:solid black 1px; text-align:center">4.0</td><td style="border:solid black 1px; text-align:center">2.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Mushrooms - Shiitake</td><td style="border:solid black 1px; text-align:center">5 oz-wt, raw</td><td style="border:solid black 1px; text-align:center">48.2</td><td style="border:solid black 1px; text-align:center">28.35</td><td style="border:solid black 1px; text-align:center">7.1</td><td style="border:solid black 1px; text-align:center">2.6</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Eggplant</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">19.7</td><td style="border:solid black 1px; text-align:center">11.48</td><td style="border:solid black 1px; text-align:center">2.9</td><td style="border:solid black 1px; text-align:center">2.6</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Sunflower seeds</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">204.4</td><td style="border:solid black 1px; text-align:center">113.75</td><td style="border:solid black 1px; text-align:center">28.4</td><td style="border:solid black 1px; text-align:center">2.5</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Buckwheat</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">154.6</td><td style="border:solid black 1px; text-align:center">85.68</td><td style="border:solid black 1px; text-align:center">21.4</td><td style="border:solid black 1px; text-align:center">2.5</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Fennel</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">27.0</td><td style="border:solid black 1px; text-align:center">14.79</td><td style="border:solid black 1px; text-align:center">3.7</td><td style="border:solid black 1px; text-align:center">2.5</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Ginger Root</td><td style="border:solid black 1px; text-align:center">1 oz-wt</td><td style="border:solid black 1px; text-align:center">22.7</td><td style="border:solid black 1px; text-align:center">12.19</td><td style="border:solid black 1px; text-align:center">3.0</td><td style="border:solid black 1px; text-align:center">2.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Quinoa, uncooked</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">156.4</td><td style="border:solid black 1px; text-align:center">83.72</td><td style="border:solid black 1px; text-align:center">20.9</td><td style="border:solid black 1px; text-align:center">2.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Beets</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">58.5</td><td style="border:solid black 1px; text-align:center">31.28</td><td style="border:solid black 1px; text-align:center">7.8</td><td style="border:solid black 1px; text-align:center">2.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Brussels Sprouts</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">37.8</td><td style="border:solid black 1px; text-align:center">20.24</td><td style="border:solid black 1px; text-align:center">5.1</td><td style="border:solid black 1px; text-align:center">2.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Black Beans</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">227.0</td><td style="border:solid black 1px; text-align:center">120.40</td><td style="border:solid black 1px; text-align:center">30.1</td><td style="border:solid black 1px; text-align:center">2.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Cashews</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">189.5</td><td style="border:solid black 1px; text-align:center">100.04</td><td style="border:solid black 1px; text-align:center">25.0</td><td style="border:solid black 1px; text-align:center">2.4</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Soybeans</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">297.6</td><td style="border:solid black 1px; text-align:center">147.92</td><td style="border:solid black 1px; text-align:center">37.0</td><td style="border:solid black 1px; text-align:center">2.2</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Scallops</td><td style="border:solid black 1px; text-align:center">4 oz-wt</td><td style="border:solid black 1px; text-align:center">127.0</td><td style="border:solid black 1px; text-align:center">62.37</td><td style="border:solid black 1px; text-align:center">15.6</td><td style="border:solid black 1px; text-align:center">2.2</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Almonds</td><td style="border:solid black 1px; text-align:center">0.25 cup</td><td style="border:solid black 1px; text-align:center">206.0</td><td style="border:solid black 1px; text-align:center">98.67</td><td style="border:solid black 1px; text-align:center">24.7</td><td style="border:solid black 1px; text-align:center">2.2</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Green Peas</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">115.7</td><td style="border:solid black 1px; text-align:center">53.72</td><td style="border:solid black 1px; text-align:center">13.4</td><td style="border:solid black 1px; text-align:center">2.1</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Tuna</td><td style="border:solid black 1px; text-align:center">4 oz-wt</td><td style="border:solid black 1px; text-align:center">157.6</td><td style="border:solid black 1px; text-align:center">72.57</td><td style="border:solid black 1px; text-align:center">18.1</td><td style="border:solid black 1px; text-align:center">2.1</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Leeks</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">54.3</td><td style="border:solid black 1px; text-align:center">24.92</td><td style="border:solid black 1px; text-align:center">6.2</td><td style="border:solid black 1px; text-align:center">2.1</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Raspberries</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">64.0</td><td style="border:solid black 1px; text-align:center">27.06</td><td style="border:solid black 1px; text-align:center">6.8</td><td style="border:solid black 1px; text-align:center">1.9</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Mushrooms - Crimini</td><td style="border:solid black 1px; text-align:center">5 oz-wt, raw</td><td style="border:solid black 1px; text-align:center">31.2</td><td style="border:solid black 1px; text-align:center">12.76</td><td style="border:solid black 1px; text-align:center">3.2</td><td style="border:solid black 1px; text-align:center">1.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Strawberries</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">46.1</td><td style="border:solid black 1px; text-align:center">18.72</td><td style="border:solid black 1px; text-align:center">4.7</td><td style="border:solid black 1px; text-align:center">1.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Tofu</td><td style="border:solid black 1px; text-align:center">4 oz-wt</td><td style="border:solid black 1px; text-align:center">86.2</td><td style="border:solid black 1px; text-align:center">34.02</td><td style="border:solid black 1px; text-align:center">8.5</td><td style="border:solid black 1px; text-align:center">1.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Tempeh</td><td style="border:solid black 1px; text-align:center">4 oz-wt</td><td style="border:solid black 1px; text-align:center">222.3</td><td style="border:solid black 1px; text-align:center">87.32</td><td style="border:solid black 1px; text-align:center">21.8</td><td style="border:solid black 1px; text-align:center">1.8</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Brown Rice</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">216.4</td><td style="border:solid black 1px; text-align:center">83.85</td><td style="border:solid black 1px; text-align:center">21.0</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Bell Peppers</td><td style="border:solid black 1px; text-align:center">1 cup, raw</td><td style="border:solid black 1px; text-align:center">28.5</td><td style="border:solid black 1px; text-align:center">11.04</td><td style="border:solid black 1px; text-align:center">2.8</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Wheat</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">151.1</td><td style="border:solid black 1px; text-align:center">58.24</td><td style="border:solid black 1px; text-align:center">14.6</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Oats</td><td style="border:solid black 1px; text-align:center">1 cup, cooked</td><td style="border:solid black 1px; text-align:center">166.1</td><td style="border:solid black 1px; text-align:center">63.18</td><td style="border:solid black 1px; text-align:center">15.8</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Navy Beans</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">254.8</td><td style="border:solid black 1px; text-align:center">96.46</td><td style="border:solid black 1px; text-align:center">24.1</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Lima Beans</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">216.2</td><td style="border:solid black 1px; text-align:center">80.84</td><td style="border:solid black 1px; text-align:center">20.2</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Millet</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">207.1</td><td style="border:solid black 1px; text-align:center">76.56</td><td style="border:solid black 1px; text-align:center">19.1</td><td style="border:solid black 1px; text-align:center">1.7</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Cantaloupe</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">54.4</td><td style="border:solid black 1px; text-align:center">19.20</td><td style="border:solid black 1px; text-align:center">4.8</td><td style="border:solid black 1px; text-align:center">1.6</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Winter squash</td><td style="border:solid black 1px; text-align:center">1 cup, baked</td><td style="border:solid black 1px; text-align:center">75.8</td><td style="border:solid black 1px; text-align:center">26.65</td><td style="border:solid black 1px; text-align:center">6.7</td><td style="border:solid black 1px; text-align:center">1.6</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Pinto Beans</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">244.5</td><td style="border:solid black 1px; text-align:center">85.50</td><td style="border:solid black 1px; text-align:center">21.4</td><td style="border:solid black 1px; text-align:center">1.6</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Shrimp</td><td style="border:solid black 1px; text-align:center">4 oz-wt</td><td style="border:solid black 1px; text-align:center">112.3</td><td style="border:solid black 1px; text-align:center">38.56</td><td style="border:solid black 1px; text-align:center">9.6</td><td style="border:solid black 1px; text-align:center">1.5</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Watermelon</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">45.6</td><td style="border:solid black 1px; text-align:center">15.20</td><td style="border:solid black 1px; text-align:center">3.8</td><td style="border:solid black 1px; text-align:center">1.5</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffcc66"><td style="border:solid black 1px">Kidney Beans</td><td style="border:solid black 1px; text-align:center">1 cup</td><td style="border:solid black 1px; text-align:center">224.8</td><td style="border:solid black 1px; text-align:center">74.34</td><td style="border:solid black 1px; text-align:center">18.6</td><td style="border:solid black 1px; text-align:center">1.5</td><td style="border:solid black 1px; text-align:center">good</td></tr><tr style="background-color:ffff99"><td style="border:solid black 1px">Rye</td><td style="border:solid black 1px; text-align:center">0.33 cup</td><td style="border:solid black 1px; text-align:center">188.5</td><td style="border:solid black 1px; text-align:center">61.35</td><td style="border:solid black 1px; text-align:center">15.3</td><td style="border:solid black 1px; text-align:center">1.5</td><td style="border:solid black 1px; text-align:center">good</td></tr></table>
+<table style="padding:0; width:100%; background-color:FFF1BD; border:solid black 2px; border-collapse:collapse;">
+<tr style="backgroundcolor:FFE998; border:solid black 1px" valign="bottom"><th style="border:solid black 1px">World's Healthiest<br>Foods Rating</th><th style="border:solid black 1px">Rule</th></tr>
+<tr><td style="text-align:center; border:solid black 1px">excellent</td>
+<td style="text-align:center; border:solid black 1px">
+DV&gt;=75% OR<br>Density&gt;=7.6&nbsp;AND&nbsp;DV&gt;=10%</td></tr>
+<tr><td style="text-align:center; border:solid black 1px">very good</td>
+<td style="text-align:center; border:solid black 1px">
+DV&gt;=50% OR<br>Density&gt;=3.4&nbsp;AND&nbsp;DV&gt;=5%</td></tr>
+<tr><td style="text-align:center; border:solid black 1px">good</td>
+<td style="text-align:center; border:solid black 1px">
+DV&gt;=25% OR<br>Density&gt;=1.5&nbsp;AND&nbsp;DV&gt;=2.5%</td></tr>
+</table></div>
+<p class="SUBTITLE-WHF"><a name="pubrecs">Public Health Recommendations</a></p>
+<p class="SUBTITLE2-WHF">What are current public health recommendations for magnesium?</p>
+<p>The Adequate Intake (AI)levels for magnesium, set in 1997 by the Institute of Medicine at the National Academy of Sciences, are as follows:
+<ul><li>males and females, 0-6 months: 30 milligrams
+<li>males and females, 6-12 months: 75 milligrams
+</ul>
+<p>The Recommended Dietary Allowances for magnesium, set in 1997 by the Institute of Medicine at the National Academy of Sciences, are as follows:
+<ul><li>males and females, 1-3 years: 80 milligrams
+<li>males and females, 4-8 years: 130 milligrams
+<li>males and females, 9-13 years: 240 milligrams
+<li>males, 14-18 years: 410 milligrams
+<li>males, 19-30 years: 400 milligrams
+<li>males, 31 years and older: 420 milligrams
+<li>females, 14-18 years: 360 milligrams
+<li>females, 19-30 years: 310 milligrams
+<li>females, 31 years and older: 320 milligrams
+<li>pregnant women, 18 years or younger: 400 milligrams
+<li>pregnant women, 19-30 years: 350 milligrams
+<li>pregnant women, 31-50 years: 360 milligrams
+<li>lactating women, 18 years or younger: 360 milligrams
+<li>lactating women, 19-30 years: 310 milligrams
+<li>lactating women, 31-50 years: 320 milligrams
+</ul>
+<p>The National Academy of Sciences set a tolerable upper limit (UL) on intake of magnesium at 350 milligrams per day for individuals 9 years and older. This limit was restricted, however, to magnesium obtained from dietary supplements, and no upper limit was set on intake of magnesium from food sources. For more details on this, see the Toxicity Symptoms section above.
+<p><a name="references"><span class="SUBTITLE-WHF">References</span></a></p>
+<ul class="blist">
+<li>Abbott LG, Rude RK. Clinical manifestations of magnesium deficiency. Miner Electrolyte Metab 1993;19:314-322 1993.
+<li>Bengtsson BL. Effect of blanching on mineral and oxalate content of spinach. J Food Technol 1969;4:141-145 1969.
+<li>Groff JL, Gropper SS, Hunt SM. Advanced Nutrition and Human Metabolism. West Publishing Company, New York, 1995 1995.
+<li>Iseri LK, French JH. Magnesium: Nature's physiologic calcium blocker. Am Heart J 1984;108:188-193 1984.
+<li>Lindberg JS, Zobitz MM, Poindexter JR, et al. Magnesium bioavailability from magnesium citrate and magnesium oxide. J Am Coll Nutr 1990;9:48-55 1990.
+<li>Meiners CR, Derise NL, Lau HC, et al. (1976). The content of nine mineral elements in raw and cooked mature dry legumes. J Arg Food Chem 1976;24:1126-1130 1976.
+<li>National Research Council. Recommended dietary allowances. 9th edition. National Academy of Sciences Press, Washington, DC, 1980;134-136 1980.
+<li>Pearson HA, Campbell V, Berrow N, et al. Modulation of voltage-dependent calcium channels in cultured neurons. Ann N Y Acad Sci 1994;747:325-335 1994.
+<li>Shils ME. Magnesium. In: Shils ME, Olson JA, and Shike M. Modern nutrition in health and disease. 8th Edition. Lea and Febiger, Philadelphia, 1994;164-184 1994.
+<li>Touyz RM. Role of magnesium in the pathogenesis of hypertension. Mol Aspects Med 2003 Feb 6;24(1-3):107-36 2003.
+<li>Wester PO. Magnesium. Am J Clin Nutr 1987;45(suppl):1305-1312 1987.
+</ul>
+  </div>
+  <div id="pagefooter">
+    <img src="http://www.whfoods.com/images/imagepanelnew.gif" alt="WHFoods" />
+    <p class="SENDTAG-WHF"><a href=mailto:?subject=WHFoods article&body=Thought you might be interested in this article from WHFoods.org: magnesium at http://whfoods.org//genpage.php?tname=nutrient%26dbid=75>Send this page to a friend...</a></p>
+    <div class="COPYRIGHT-WHF">
+      <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0000tw-44-13880&c=false>home</a> | <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-64-23208&c=false>who we are</a>  |  <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33834&c=false>site map</a>  |  <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33841&c=false>what's new</a>  |  <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0605wb-73-33836&c=false>privacy policy and visitor agreement</a>
+      <br />&copy; 2001-2012 The George Mateljan Foundation
+    </div>
+<!-- p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-html401" alt="Valid HTML 4.01 Transitional" height="31" width="88"></a><a href="http://jigsaw.w3.org/css-validator/check?uri=referer"><img style="border:0;width:88px;height:31px" src="http://jigsaw.w3.org/css-validator/images/vcss" alt="Valid CSS!"></a></p -->
+  </div>
+</div>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-2269914-1");
+pageTracker._initData();
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

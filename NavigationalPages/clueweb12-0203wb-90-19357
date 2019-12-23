@@ -1,0 +1,88 @@
+<!-- Original URL: http://www.nal.usda.gov/fnic/Fpyr/pmap.htm -->
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 3.0//EN" "html.dtd">
+   <HTML>
+   <head><SCRIPT LANGUAGE="JavaScript" SRC="http://www.nal.usda.gov/scripts/triggerParams%5FLowSP.js"></SCRIPT><SCRIPT LANGUAGE="JavaScript" SRC="http://www.nal.usda.gov/scripts/stdLauncher.js"></SCRIPT>
+   <TITLE>Food Guide Pyramid</TITLE>
+   </HEAD>
+   <BODY onUnload='Poll(); return true;'   background="py1.gif">
+   <h1><center>The 
+   Food Guide Pyramid</h1> <h2>A Guide to Daily Food
+   Choices</h2><a href=http://www.nal.usda.gov/fnic/Fpyr/pmap.map> 
+   <img src="http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/getresource.cgi?id=E4DA75591952FE76444D83B07A21F62FA358C4AB" align=center border="0" ismap usemap="#pmap1"></a></center>
+    <center>
+   <a href=http://www.nal.usda.gov/fnic/Fpyr/pfat.htm>Fats, Oils, and Sweets</a> / 
+   <a href=http://www.nal.usda.gov/fnic/Fpyr/pmilk.htm>Milk, Yogurt, and Cheese</a> / 
+   <a href=http://www.nal.usda.gov/fnic/Fpyr/pmeat.htm>Meat, Poultry,  Fish, Beans, Eggs, and Nuts</a>  
+   <a href=http://www.nal.usda.gov/fnic/Fpyr/pveg.htm>Vegetables</a> / 
+   <a href=http://www.nal.usda.gov/fnic/Fpyr/pfruit.htm>Fruits</a> / 
+   <a href=http://www.nal.usda.gov/fnic/Fpyr/pbread.htm>Breads, Cereal, Rice, and Pasta</a>
+   <h3>Select a 
+   section of the pyramid for details</H3></center>
+   
+   <b>The Food Guide Pyramid is an outline of what to eat each day based on 
+  the 
+   <a href=http://boston.lti.cs.cmu.edu/Services/clueweb12_render/getresource.cgi/renderpage.cgi?id=clueweb12-0112wb-18-29713&c=false>Dietary 
+  Guidelines
+   </a>. It's not a rigid prescription but a general guide that lets you 
+   choose a healthful diet that's right for you.<p>
+   The Pyramid calls for eating a variety of foods to get the nutrients 
+   you need and at the same time the right amount of calories to 
+   maintain healthy weight.<p>
+   Use the Pyramid to help you eat better every day...the Dietary 
+   Guidelines way. Start with plenty of breads, cereals, rice, pasta, 
+   vegetables, and fruits. Add 2-3 servings from the milk group and 2-3 
+   servings from the meat group. Remember to go easy on fats, oils, and 
+   sweets, the foods in the small tip of the Pyramid.
+   <h3><center>What Counts as One Serving?</center></h3>
+   The amount of food that counts as one serving is listed below. If you 
+   eat a larger portion, count it as more than 1 serving. For example, 
+   a dinner portion of spaghetti would count as 2 or 3 servings of 
+   pasta.<p>
+   Be sure to eat at least the lowest number of servings from the five 
+   major food groups listed below. You need them for the vitamins, 
+   minerals, carbohydrates, and protein they provide. Just try to pick 
+   the lowest fat choices from the food groups. No specific serving size 
+   is given for the fats, oils, and sweets group because the message is 
+   USE SPARINGLY.</b><p>
+   
+   <center>
+   <TABLE COLSPEC="L20 L20 L20" BORDER=1 CELLPADDING=4>
+   <CAPTION ALIGN=top><b>Milk, Yogurt, and Cheese</b></CAPTION>
+   <TR><TD>1 cup of milk or yogurt</TD><TD>1 1/2 ounces of natural cheese</TD><TD>2 ounces of process cheese</TD></TR>
+   </TABLE>
+   <P>
+   
+   <TABLE COLSPEC="L20 L20" BORDER=1 CELLPADDING=4>
+   <CAPTION ALIGN=top><b>Meat, Poultry, Fish, Dry Beans, Eggs, and Nuts</b></CAPTION>
+   <TR><TD>2-3 ounces of cooked lean meat, poultry, or fish</TD><TD>1/2 cup of cooked dry beans, 1 egg, or 2 tablespoons of peanut butter count as 1 ounce of lean meat</TD></TR>
+   </TABLE>
+   <p>
+   
+   <TABLE COLSPEC="L20 L20 L20" BORDER=1 CELLPADDING=4>
+   <CAPTION ALIGN=top><b>Vegetable</b></CAPTION>
+   <TR><TD>1 cup of raw leafy vegetables</TD><TD>1/2 cup of other vegetables, cooked or chopped raw</TD><TD>3/4 cup of vegetable juice</TD></TR>
+   </TABLE>
+   <P>
+   
+   <TABLE COLSPEC="L20 L20 L20" BORDER=1 CELLPADDING=4>
+   <CAPTION ALIGN=top><b>Fruit</b></CAPTION>
+   <TR><TD>1 medium apple, banana, orange</TD><TD>1/2 cup of chopped, cooked, or canned fruit</TD><TD>3/4 cup of fruit juice</TD></TR>
+   </TABLE>
+   <P>
+   
+   <TABLE COLSPEC="L20 L20 L20" BORDER=1 CELLPADDING=4>
+   <CAPTION ALIGN=top><b>Bread, Cereal, Rice, and Pasta</b></CAPTION>
+   <TR><TD>1 slice of bread</TD><TD>1 ounce of ready-to-eat cereal</TD><TD>1/2 cup of cooked cereal, rice, or pasta</TD></TR>
+   </TABLE>
+   
+   
+   <map name="pmap1">
+ <area shape="rect" coords="106,11,247,57" href="http://www.nal.usda.gov/fnic/Fpyr/pfat.htm" title="">
+ <area shape="rect" coords="38,53,182,110" href="http://www.nal.usda.gov/fnic/Fpyr/pmilk.htm" title="">
+ <area shape="rect" coords="183,57,327,111" href="http://www.nal.usda.gov/fnic/Fpyr/pmeat.htm" title="">
+ <area shape="rect" coords="27,104,187,159" href="http://www.nal.usda.gov/fnic/Fpyr/pveg.htm" title="">
+ <area shape="rect" coords="190,110,348,158" href="http://www.nal.usda.gov/fnic/Fpyr/pfruit.htm" title="">
+ <area shape="rect" coords="26,161,372,214" href="http://www.nal.usda.gov/fnic/Fpyr/pbread.htm" title="">
+ <area shape="default" nohref>
+ </map>
+ </body></html>

@@ -1,0 +1,297 @@
+---
+title: "ter_fieldedRetrieval"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This analyse fielded retrieval results using Terrier
+
+## Analysis Tuning Boost Scheme Results
+# This explore performance from tuning boost schema results using uniform b = 0.75 and K = 1.2
+
+rm(list = ls())
+
+# Load Trec eval results
+```{r }
+#trecEvalResult <- read.table("../data/ter_hard2003_tuneWeight.eval", header=TRUE, row.names=NULL)
+
+#trecEvalResult <- read.table("../data/ter_hard2005_tuneWeight.eval", header=TRUE, row.names=NULL)
+
+# trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/ter_hard2005_tuneWeight.eval", header=TRUE, row.names=NULL)
+# 
+#trecEvalResult <- read.table("../data/ter_web_tuneWeight.eval", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("../data/ter_Clef2016_tuneWeight.eval", header=TRUE, row.names=NULL)
+# 
+# trecEvalResult <- read.table("/Volumes/Data/Github/ipm2017_fielded_retrieval/data/ter_Clef2016_tuneWeight.eval", header=TRUE, row.names=NULL)
+
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+avgScores = aggregate(trecEvalResult[,4:8],list(trecEvalResult$schema, trecEvalResult$alpha), mean)
+colnames(avgScores)[2] <- "alpha"
+```
+
+# General Chart Setup
+```{r }
+lW = 2.5
+w = 8
+h = 6
+outputPath = "../latex_irj/"
+```
+
+# Line Plot performance alpha
+***** Lines/dot Plot
+```{r }
+xrange <- range(as.numeric(avgScores$alpha))
+yrange <- range(c(avgScores$p10, avgScores$ndcg10, avgScores$map, avgScores$bpref))
+
+margin=c(3,3,1,1)
+cols <- c("blue", "red", "green4", "orange")
+ltys <- c(1,2,3,4)
+pchs <- c(1,2,3,4)
+lbls <- c("P@10","nDCG@10","MAP","BPREF")
+par(mar=margin)
+plot(xrange, yrange, type="n", xlab=NA, ylab=NA, axes=FALSE)
+
+box(lty=1, col='black')
+axis(side=1, at=avgScores$alpha)
+axis(side=2, at=seq(round(min(yrange),3), round( max(yrange),3)+0.01,by=round((max(yrange)-min(yrange))/7,3)))
+
+lines(avgScores$alpha, avgScores$p10, type="b", lwd=lW, lty=ltys[1], pch=1, col=cols[1])
+lines(avgScores$alpha, avgScores$ndcg10, type="b", lwd=lW, lty=ltys[2], pch=2, col=cols[2])
+lines(avgScores$alpha, avgScores$map, type="b", lwd=lW, lty=ltys[3], pch=3, col=cols[3])
+lines(avgScores$alpha, avgScores$bpref, type="b", lwd=lW, lty=ltys[4], pch=4, col=cols[4])
+
+# unifield stuff
+#uniEvalResult <- read.table("../data/ter_hard2003_tuneWeight_unifield.eval", header=TRUE, row.names=NULL)
+#uniEvalResult <- read.table("../data/ter_hard2005_tuneWeight_unifield.eval", header=TRUE, row.names=NULL)
+#uniEvalResult <- read.table("../data/ter_web_tuneWeight_unifield.eval", header=TRUE, row.names=NULL)
+uniEvalResult <- read.table("../data/ter_clef2016_tuneWeight_unifield.eval", header=TRUE, row.names=NULL)
+
+uniAvgScores = aggregate(uniEvalResult[,4:8],list(uniEvalResult$schema, uniEvalResult$b), mean)
+colnames(uniAvgScores)[2] <- "b"
+defUniAvgScores = uniAvgScores[uniAvgScores$b == 75, ]
+
+# UNIFIELD - add line to represent performance from unifield index
+abline(h=defUniAvgScores$p10, lwd=lW, lty=ltys[1], col=cols[1])
+abline(h=defUniAvgScores$ndcg10, lwd=lW, lty=ltys[2], col=cols[2])
+abline(h=defUniAvgScores$map, lwd=lW, lty=ltys[3], col=cols[3])
+abline(h=defUniAvgScores$bpref, lwd=lW, lty=ltys[4], col=cols[4])
+
+mtext(side=1, expression(alpha), line=2, cex=1.7)
+mtext(side=2, "Evaluation Score", line=2, cex=1.2)
+
+#legend(x=0.7, y=max(yrange), legend=lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=1.2, xpd=TRUE,y.intersp=2, x.intersp=0.5)
+
+
+legend("bottomleft", legend=lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=1.2, xpd=TRUE,y.intersp=1, x.intersp=0.5)
+
+#dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Hard2003.pdf", sep=""), width=w, height=h)
+#dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Hard2005.pdf", sep=""), width=w, height=h)
+#dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Web.pdf", sep=""), width=w, height=h)
+dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+
+#legend("topleft", legend=lbls, lty=ltys, pch=pchs, ncol=1, text.width= 1, col=cols, bty='n', lwd=lW, cex=1.2, xpd=TRUE,y.intersp=0.5, x.intersp=0.5)
+```
+
+# ***** BM25F Save Plot performance alpha
+```{r }
+dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Hard2003.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Web.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_performanceByAlpha_Clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+
+```
+
+
+## Terrier - Analysis of tuning B title and B body parameter using box plot 
+rm(list = ls())
+
+# Load Trec eval results
+```
+trecEvalResult <- read.table("../data/ter_hard2003_tuneB.eval", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("../data/ter_hard2005_tuneB.eval", header=TRUE, row.names=NULL)
+
+trecEvalResult <- read.table("../data/ter_web_tuneB.eval", header=TRUE, row.names=NULL)
+
+trecEvalResult$alpha = trecEvalResult$alpha/10
+
+avgScores = aggregate(trecEvalResult[,6:10],list(trecEvalResult$schema, trecEvalResult$alpha, trecEvalResult$bt, trecEvalResult$bb), mean)
+colnames(avgScores)[2] <- "alpha"
+colnames(avgScores)[3] <- "bt"
+colnames(avgScores)[4] <- "bb"
+
+outputPath = "/Volumes/Data/Github/ipm2017_fielded_retrieval/latex_irj/"
+w = 8
+h = 6
+margin=c(5,3,1,1)
+lW = 1.5
+lbls <- c("Title Only", "Body Only", "Title = Body", "Title > Body", "Body > Title", 
+          "Best of All", "Significant Best")
+cols <- c("blue", "orange", "darkred", "blue","orange", "purple", "purple")
+ltys <- c(0,0,0,0,0,0)
+pchs <- c(2,5,1,6,0,4,8)
+```
+
+# Box Plot tuning B Title and  test significance between best of all runs to best of each B title value
+```
+par(mar=margin)
+boxplot(ndcg10~factor(bt), data=avgScores)
+
+bestAll = avgScores[which.max(avgScores$ndcg10),]
+bestAll_run = trecEvalResult[trecEvalResult$alpha == bestAll$alpha & 
+                             trecEvalResult$bt == bestAll$bt &
+                             trecEvalResult$bb == bestAll$bb,]
+points((bestAll$bt*20)+1, bestAll$ndcg10, pch=pchs[6], col=cols[6], lwd=lW, cex=1.5)
+
+for(i in 1:21)
+{
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 1,]
+  bestTitleOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleOnly$ndcg10, pch=pchs[1],   col=cols[1], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0,]
+  bestBodyOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyOnly$ndcg10, pch=pchs[2],   col=cols[2], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0.5,]
+  bestTitleBody = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBody$ndcg10, pch=pchs[3],   col=cols[3], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0.8,]
+  bestTitleBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBoost$ndcg10, pch=pchs[4],   col=cols[4], lwd=lW)
+  
+  temp = avgScores[avgScores$bt == (i-1)/20 & avgScores$alpha == 0.2,]
+  bestBodyBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyBoost$ndcg10, pch=pchs[5],   col=cols[5], lwd=lW)
+  
+  if(i != (bestAll$bt*20)+1)
+  {
+    temp = avgScores[avgScores$bt == (i-1)/20,]
+    bestI = temp[which.max(temp$ndcg10),]
+    bestI_run = trecEvalResult[trecEvalResult$alpha == bestI$alpha & 
+                               trecEvalResult$bt == bestI$bt &
+                               trecEvalResult$bb == bestI$bb,]
+    sig = t.test(bestAll_run$ndcg10,bestI_run$ndcg10,paired=TRUE,two.sided=TRUE)$p.value
+    if (!is.nan(sig))
+    {
+      if(sig <= 0.05)
+      {
+        points(i, bestI$ndcg10, pch=pchs[7],   col=cols[7], lwd=lW)
+      }
+    }
+  }
+}
+
+mtext(side=1, "B title", line=2)
+mtext(side=2, "nDCG@10", line=2)
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=1, seg.len=1, x.intersp=0.005, y.intersp=1.8, inset= c(0,-0.25),text.width= 3)
+```
+
+
+***** Save Tuning B Title
+```
+dev.copy(pdf,paste(outputPath, "terrier_TuneBtitle_NDCG10_hard2003.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBtitle_NDCG10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBtitle_NDCG10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBtitle_NDCG10_clef2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBtitle_NDCG10_clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```
+
+
+
+
+# Box Plot tuning B Body
+```
+par(mar=margin)
+boxplot(ndcg10~factor(bb), data=avgScores)
+
+bestAll = avgScores[which.max(avgScores$ndcg10),]
+bestAll_run = trecEvalResult[trecEvalResult$alpha == bestAll$alpha & 
+                             trecEvalResult$bt == bestAll$bt &
+                             trecEvalResult$bb == bestAll$bb,]
+points((bestAll$bb*20)+1, bestAll$ndcg10, pch=pchs[6], col=cols[6], lwd=lW, cex=1.5)
+
+for(i in 1:21)
+{
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 1,]
+  bestTitleOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleOnly$ndcg10, pch=pchs[1],   col=cols[1], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0,]
+  bestBodyOnly = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyOnly$ndcg10, pch=pchs[2],   col=cols[2], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0.5,]
+  bestTitleBody = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBody$ndcg10, pch=pchs[3],   col=cols[3], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0.8,]
+  bestTitleBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestTitleBoost$ndcg10, pch=pchs[4],   col=cols[4], lwd=lW)
+  
+  temp = avgScores[avgScores$bb == (i-1)/20 & avgScores$alpha == 0.2,]
+  bestBodyBoost = temp[which.max(temp$ndcg10),]
+  points(i, bestBodyBoost$ndcg10, pch=pchs[5],   col=cols[5], lwd=lW)
+  
+  if(i != (bestAll$bb*20)+1)
+  {
+    temp = avgScores[avgScores$bb == (i-1)/20,]
+    bestI = temp[which.max(temp$ndcg10),]
+    bestI_run = trecEvalResult[trecEvalResult$alpha == bestI$alpha & 
+                               trecEvalResult$bt == bestI$bt &
+                               trecEvalResult$bb == bestI$bb,]
+    sig = t.test(bestAll_run$ndcg10,bestI_run$ndcg10,paired=TRUE,two.sided=TRUE)$p.value
+    if(sig <= 0.05)
+    {
+      points(i, bestI$ndcg10, pch=pchs[7],   col=cols[7], lwd=lW)
+    }
+  }
+}
+
+mtext(side=1, "B body", line=2)
+mtext(side=2, "nDCG@10", line=2)
+legend("bottom", lbls, lty=ltys, ncol=5,  xpd=TRUE, col=cols, bty='n', lwd=lW, pch=pchs, cex=1, seg.len=1, x.intersp=0.005, y.intersp=2, inset= c(0,-0.20),text.width= 3)
+```
+
+***** Save Tuning B Body
+```
+dev.copy(pdf,paste(outputPath, "terrier_TuneBbody_NDCG10_hard2003.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBbody_NDCG10_hard2005.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBbody_NDCG10_web2013_2014.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBbody_NDCG10_clef2015.pdf", sep=""), width=w, height=h)
+dev.off()
+
+dev.copy(pdf,paste(outputPath, "terrier_TuneBbody_NDCG10_clef2016.pdf", sep=""), width=w, height=h)
+dev.off()
+```

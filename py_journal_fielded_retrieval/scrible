@@ -1,0 +1,83 @@
+<query>
+	<id>101003</id>
+	<title>inguinal hernia success rate</title>
+</query>
+
+inguinal
+clueweb12-1912wb-40-03884
+inguin: 182
+
+hernia
+clueweb12-0717wb-30-04940
+hernia: 1324
+
+success
+clueweb12-1012wb-94-04393
+success: 56353
+
+rate
+clueweb12-1904wb-60-07887
+rate: 162686
+
+
+226:traverse city
+traverse
+clueweb12-1201wb-88-01218
+travers
+3191
+
+city
+clueweb12-1805wb-50-04102
+citi
+391052
+
+
+curl -XPOST 'localhost:9200/clueweb12b_all/clueweb/_search?pretty' -d '
+{
+    "from": 0,
+    "size": 1,
+    "_source": ["title"],
+    "query": {
+       "query_string": {
+           "query": "city",
+           "fields": ["title"],
+           "use_dis_max": true,
+           "tie_breaker": 0.25
+       }
+    }
+}'
+
+
+curl -XGET 'localhost:9200/clueweb12b_all/clueweb/clueweb12-1805wb-50-04102/_termvector?pretty=true' -d '
+{
+    "fields": ["title"],
+    "offsets": false,
+    "term_statistics": true,
+    "field_statistics": false
+}'
+
+
+curl -XGET 'localhost:9200/clueweb12b_all/clueweb/_termvectors?pretty=true' -d '
+{
+  "doc" : {
+    "title" : "inguinal hernia surgery story, is it safe?"
+  },
+  "term_statistics": true
+}'
+
+
+
+
+docType = "clueweb"
+indexName = "clueweb12b_all"
+
+inguinal hernia surgery story, is it safe?
+
+
+
+curl -XGET http://localhost:9200/clueweb12b_all/_mapping/clueweb?pretty
+
+
+Curl -XGET 'localhost:9200/clueweb12b_all/clueweb/clueweb12-0915wb-34-01721?stored_fields=title.length,body.length&pretty'
+
+Curl -XGET 'localhost:9200/clueweb12b_all/clueweb/clueweb12-0915wb-34-01721?pretty'
